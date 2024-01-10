@@ -1,0 +1,98 @@
+\documentclass{article}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{extarrows}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usepackage{cancel}
+\usetikzlibrary{shapes,arrows}
+
+\newcommand{\accapo}{\\\hspace*{1cm}\\}
+\newcommand{\Eaccentata}{$\grave{\text{E}}$ }
+\newcommand{\vopen}{``}
+\newcommand{\vclose}{''}
+\newcommand{\vclosespace}{'' }
+\newcommand{\trasformata}{\xrightarrow{\mathscr{F}}}
+\newcommand{\antitrasformata}{\xrightarrow{\mathscr{F}^{-1}}}
+
+\setlength{\parindent}{0cm}
+% chktex-file 44
+% chktex-file 36
+% chktex-file 1
+\hfuzz=100pt
+
+\title{Campionamento\\\normalsize fondamenti di telecomunicazioni}
+\author{Flavio Colacicchi}
+\date{29$-$/11/2023}
+\begin{document}
+\maketitle
+
+Richiami delle serie di Fourier
+\[\text{Treno di delta, treno campionatore, comb o pettine }\pi(t)=\sum_{n\in\mathbb{Z}}\delta(t-nT)=\sum_{k\in\mathbb{Z}}c_k e^{i2\pi n\frac{t}{T}}\]
+Dove
+\[c_k=\frac{1}{T}\int_{-\frac{T}{2}}^{\frac{T}{2}}\pi(t)e^{-i2\pi n\frac{t}{T}}dt=\frac{1}{T}\int_{-\frac{T}{2}}^\frac{T}{2}\delta(t)e^{-i2\pi n\frac{t}{T}}dt=\frac{1}{T}\int_{-\frac{T}{2}}^\frac{T}{2}\delta(t)dt=\frac{1}{T}\]
+Ora voglio vedere il suo spettro
+\[\Pi(f)=\begin{cases}
+    \sum_{n\in\mathbb{Z}}e^{-i2\pi nTf}&\text{trasformando la definizione}\\
+    \sum_{k\in\mathbb{Z}}\frac{1}{T}\delta\left(f-\frac{k}{T}\right)&\text{trasformando la serie di Fourier}
+\end{cases}\]
+\Large\[x(t)\to\boxed{D.A.C.}\to x_c(t)\]
+\[x_c(t)=x(t)\pi(t)=\sum_{n\in\mathbb{Z}}x(t)\delta(t-nT)=\sum_{n\in\mathbb{Z}}x(nT)\delta(t-nT)\]\normalsize
+Ora vedo cosa succende nel dominio delle frequenze
+\[X(f)\to\boxed{D.A.C.}\to X_c(f)\]
+\[X_c(f)=\begin{cases}
+    X(f)*\Pi(f)=X(f)*\frac{1}{T}\sum_{n\in\mathbb{Z}}\delta\left(f-\frac{n}{T}\right)=\frac{1}{T}\sum_{n\in\mathbb{Z}}X\left(f-\frac{n}{T}\right)&\text{dalla serie di Fourier di \(\Pi(f)\)}\\
+    \sum_{n\in\mathbb{Z}}x(nT)e^{-i2\pi nTf}=\sum_{n\in\mathbb{Z}}x[n]e^{-i2\pi nfT}&\text{operando prima sulle serie nel tempo}
+\end{cases}\]
+Quindi la trasformata di Fouerier di un segnale campionato o la trasformata della serie di un segnale campionato sono uguali
+\[x[n]\trasformata X_c(f)=\sum_{n\in\mathbb{Z}}x[n]e^{-i2\pi fnT}\]
+\[x[n]=x(nT)={x(t)}_{t=nT}\]
+\[x(t)\trasformata X(f)\]
+\[X_c(f)=\frac{1}{T}\sum_{n\in\mathbb{Z}}X\left(f-\frac{n}{T}\right)\]
+Esempi:\begin{enumerate}
+    \item \[x[n]=1\]
+        \[X_c(f)=\begin{cases}
+            \sum_{n\in\mathbb{Z}}e^{-i2\pi nfT}\\
+            \frac{1}{T}\sum_{n\in\mathbb{Z}}X\left(f-\frac{n}{T}\right)\xlongequal{x(t)=1\trasformata X(f)=\delta(f)}\frac{1}{T}\sum_{n\in\mathbb{Z}}\delta\left(f-\frac{n}{T}\right)
+        \end{cases}\]
+    \item \[x[n]={\left[\frac{\sin(2\pi f_c nT)}{\pi n}\right]}^2=4 {f_c}^2 \pi^2 T^2 {sinc}^2(2f_c nT)\]
+        \[x(t)=4{f_c}^2 T^2{sinc}^2(4f_c t)\trasformata 4{f_c}^2 T^2\frac{1}{2f_c}tri\left(\frac{f}{2f_c}\right)=X(f)\]
+        \[X_c(f)=\sum_{n\in\mathbb{Z}}X\left(f-\frac{n}{T}\right)=2f_c T\sum_{n\in\mathbb{Z}} tri\left(\frac{f-nT}{2f_c}\right)\]
+    \item \[y[n]=x[n]*h[n]=(a^n u[n])*(b^n u[n])\]
+        Con la convoluzione
+        \[y[n]=\begin{cases}
+            \sum_{k\in\mathbb{Z}}x[k]h[n-k]=\sum_{k=0}^{n}a^{k}b^{n-k}=b^n\sum_{k=0}^{n}{\left(\frac{a}{b}\right)}^k=b^n\frac{1-{\left(\frac{a}{b}\right)}^{n+1}}{a-\frac{a}{b}}=\frac{b^{n+1}-a^{n+1}}{b-a}&n\geq0\\
+            0&n<0
+        \end{cases}\]
+        \[y[n]=\frac{b^{n+1}-a^{n+1}}{b-a}u[n]\]
+        Altrimenti posso fare
+        \[Y_c(f)=X_c(f)H_c(f)\antitrasformata y[n]\]
+        \[X_c(f)=\sum_{n=0}^{+\infty}a^n e^{-i2\pi nfT}=\sum_{n=0}^{+\infty}{(ae^{^{-i2\pi ft}})}^n=\frac{1}{1-ae^{-i2\pi fT}}\]
+        \[H_c(f)=\frac{1}{1-be^{-i2\pi fT}}\]
+        \[Y_c(f)=X_c(f)H_c(f)=\frac{1}{1-ae^{-i2\pi fT}}\cdot\frac{1}{1-be^{-i2\pi fT}}=\frac{A}{1-ae^{-i2\pi fT}}+\frac{B}{1-be^{-i2\pi fT}}=\]
+        \[=\frac{A+B-(Ab+Ba)e^{-i2\pi fT}}{(1-ae^{-i2\pi fT})(1-be^{-i2\pi fT})}\Rightarrow\begin{cases}
+            A+B=1\\Ab=-Ba
+        \end{cases}\Rightarrow\begin{cases}
+            B=\frac{b}{b-a}\\A=-\frac{a}{b-a}
+        \end{cases}\Rightarrow\]
+        \[\Rightarrow Y_c(f)=\frac{A}{1-ae^{-i2\pi fT}}+\frac{B}{1-be^{-i2\pi fT}}\antitrasformata y[n]=A a^n u[n]+B b^n u[n]=\frac{b}{b-a}b^n u[n]-\frac{a}{b-a} a^n u[n]=\]
+        \[=\frac{b^{n+1}-a^{n+1}}{b-a}u[n]\]
+    \item \[x[n]=-\frac{\sin\left(\frac{\pi n}{3}\right)}{\pi n}\cos\left(\frac{2\pi n}{6}\right)\hspace{2cm}T=1\]
+        \[x(t)\frac{\sin\left(\frac{\pi t}{3}\right)}{\pi t}\cos\left(\frac{2\pi t}{6}\right)=\frac{1}{3}sinc\left(\frac{t}{3}\right)\cos\left(\frac{2\pi t}{6}\right)\]
+        \[X(f)=rect(3f)*\left[\frac{1}{2}\delta\left(f-\frac{1}{6}\right)+\frac{1}{2}\delta\left(f+\frac{1}{6}\right)\right]=\frac{1}{2}rect\left[3\left(f-\frac{1}{6}\right)\right]+\frac{1}{2}rect\left[3\left(f+\frac{1}{6}\right)\right]\]
+        \[X_c(f)=\frac{1}{T}\sum_{n\in\mathbb{Z}}X\left(f-\frac{n}{T}\right)=\sum_{n\in\mathbb{Z}}X(f-n)\]
+    \item \[x[n]={\left[\frac{\sin\left(\frac{\pi n}{3}\right)}{\pi n}\right]}^2=\frac{1}{9}{sinc}^2\left(\frac{\pi n}{3}\right)\]
+        \[X(f)=\frac{1}{3}tri(3f)\]
+        \[X_c(f)=\sum_{n\in\mathbb{Z}}X(f-n)=\frac{1}{3}\sum_{n\in\mathbb{Z}}tri[3(f-n)]\]
+\end{enumerate}
+
+Se prendo \(T\) troppo grande rischio che i campioni in frequenza si vanno a sovrapporre creando così \textbf{aliasing} nella ricpstruzione
+
+\end{document}

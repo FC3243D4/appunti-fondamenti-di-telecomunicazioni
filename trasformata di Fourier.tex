@@ -1,0 +1,384 @@
+\documentclass{article}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{extarrows}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usepackage{cancel}
+\usetikzlibrary{shapes,arrows}
+
+\newcommand{\accapo}{\\\hspace*{1cm}\\}
+\newcommand{\Eaccentata}{$\grave{\text{E}}$ }
+\newcommand{\vopen}{``}
+\newcommand{\vclose}{''}
+\newcommand{\vclosespace}{'' }
+\newcommand{\trasformata}{\xrightarrow{\mathscr{F}}}
+\newcommand{\antitrasformata}{\xrightarrow{\mathscr{F}^{-1}}}
+
+\setlength{\parindent}{0cm}
+% chktex-file 44
+% chktex-file 36
+% chktex-file 1
+\hfuzz=100pt
+
+\title{Trasformata Fourier\\\normalsize fondamenti di telecomunicazioni}
+\author{Flavio Colacicchi}
+\date{07$-$29/11/2023}
+\begin{document}
+\maketitle
+\begin{center}
+\LARGE\[x(t)\trasformata X(f)=\int_{-\infty}^{+\infty}x(t) e^{-i2\pi ft}dt\]
+\[X(f)\antitrasformata x(t)=\int_{-\infty}^{+\infty}X(f) e^{i2\pi ft}df\]
+\end{center}
+Proprietà\footnote{tabella riassuntiva alla terzultima pagina del documento}:
+\begin{enumerate}
+    \item Duale
+        \[X(t)\trasformata x(-f)\]
+    \item Scala
+        \[x(\alpha t)\trasformata\frac{1}{|a|}X\left(\frac{f}{a}\right)\]
+    \item Traslazione nel tempo
+        \[x(t-t_0)\trasformata e^{-2i\pi f t_0}X(f)\]
+        Dimostrazione
+        \[x(t-t_0)\trasformata \int_{-\infty}^{+\infty}x(t-t_0)e^{-2i\pi ft}dt\xlongequal{t'=t-t_0}\int_{-\infty}^{+\infty}x(t')e^{-2i\pi f(t'+t_0)}=e^{-2i\pi f t_0}\int_{-\infty}^{+\infty}x(t')e^{-2i\pi ft'}=\]
+        \[=e^{-2i\pi f t_0}X(f)\]
+    \item Traslazione in frequenza o della modulazione
+        \[x(t)e^{2i\pi f_0 t}\trasformata \int_{-\infty}^{+\infty}x(t)e^{i2\pi f_0 t}e^{-2i\pi ft}=X(f-f_0)\]
+    \item Derivazione
+        \[x'(t)=\frac{d}{dt}x(t)\trasformata X'(f)=2i\pi fX(f)\]
+        Dimostrazione
+        \[x(t)=\int_{-\infty}^{+\infty}X(f)e^{2i\pi ft}\rightarrow\frac{d}{dx}x(t)=\int_{-\infty}^{+\infty}2i\pi fX(f)e^{2i\pi ft}df\]
+    \item Duale rispetto alla derivata
+        \[2i\pi t\cdot x(t)\trasformata\frac{dX(f)}{df}\]
+        Dimostrazione\\
+        Derivo la definizione di trasformata di Fourier
+        \[\frac{d}{df}X(f)=\frac{d}{df}\int_{-\infty}^{+\infty}x(t)e^{-2i\pi t}df=\int-2i\pi f x(t)e^{^{-2i\pi ft}}\Rightarrow 2i\pi tx(t)\trasformata\frac{dX(f)}{df}\]
+    \item Teorema della convoluzione
+        \[x(t)*y(t)\trasformata X(f)Y(f)\]
+        Dimostrazione
+        \[x(t)*y(t)=\int_{-\infty}^{+\infty}x(t-\tau)y(\tau)d\tau\xLeftrightarrow{y(\tau)=\int_{-\infty}^{+\infty}Y(f)e^{2i\pi f\tau}df}\int_{-\infty}^{+\infty}x(t-\tau)\int_{-\infty}^{+\infty}Y(f)e^{2i\pi f\tau}dfd\tau\]
+        Cambio l'ordine di integrazione
+        \[\int_{-\infty}^{+\infty}x(t-\tau)\int_{-\infty}^{+\infty}Y(f)e^{2i\pi f\tau}d\tau df\xlongequal{t'=t-\tau}\int_{-\infty}^{+\infty}Y(f)e^{2i\pi ft}\int_{-\infty}^{+\infty}x(t')e^{-2i\pi ft'}dt'df=\]
+        \[=\int_{-\infty}^{+\infty}Y(f)X(f)e^{2i\pi ft}df\]
+    \item Integrazione
+        \[\int_{-\infty}^{t} x(\tau)d\tau\trasformata \frac{X(0)}{2}\delta(f)+\frac{X(f)}{2i\pi f}\]
+        Dimostrazione
+        \[\int_{-\infty}^{t} x(\tau)d\tau=\int_{.\infty}^{+\infty}u(t-\tau)x(\tau)d\tau=u(t)*x(t)\trasformata\left(\frac{1}{2}\delta(f)+\frac{1}{2i\pi f}\right)X(f)\]
+    \item Trasformata del complesso coniugato
+        \[x^*(t)\trasformata X^*(-f)\]
+        Dimostrazione
+        \[x^*(t)\trasformata\int_{-\infty}^{+\infty}x^*(t)e^{-2i\pi ft}dt={\left(\int_{-\infty}^{+\infty}x(t)e^{2i\pi f}dt\right)}^*={(X(-f))}^*=X^*(-f)\leftarrow\text{simmetria Hermitiana}\]
+    \item Correlazione
+        \[x(t)\otimes y(t)\trasformata Y^*(f)X(f)\]
+        Dimostrazione
+        \[x(t)\otimes y(t)=y^*(-t)*x(t)\trasformata Y^*(f)X(f)\]
+    \item Teorema di Parseval
+        \[E_x=\int_{-\infty}^{+\infty}|X(f)|^2 df\]
+        Dimostrazione
+        \[z(t)x(t)*y(t)\trasformata Z(f)=X(f)Y(f)\Leftrightarrow z(t)=\int_{-\infty}^{+\infty}X(f)Y(f)e^{2i\pi ft}df\Rightarrow z(0)=\int_{-\infty}^{+\infty}X(f)Y(f)df\]
+        facciamo lo stesso ragionamento ma con $y^*(-t)$
+        \[z(t)=x(t)*y^*(-t)\trasformata Z(f)=X(f)Y^*(f)\Leftrightarrow z(t)=\int_{-\infty}^{+\infty}X(f)Y^*(f)e^{2i\pi ft}df\Rightarrow z(0)=\int_{-\infty}^{+\infty}X(f)Y^*(f)df=\]
+        \[=<x(t),y(t)>\]
+        scegliendo \(y(\tau)=x(\tau)\) vediamo che
+        \[\int_{-\infty}^{+\infty}|x(\tau)|^2=\int_{-\infty}^{+\infty}|X(f)|^2 df\]
+    \item Trasfomata di un segnale reale
+        \[X(f)=\int_{-\infty}^{+\infty}x(t)e^{-2i\pi ft}dt\xlongequal{x\in\mathbb{R}}\int_{-\infty}^{+infty}x(t)\cos(2\pi ft)dt-i\int_{-\infty}^{+\infty}x(t)\sin(2\pi ft)dt=\Re (f)+i\Im (f)\]
+        Allora
+        \[\Re(f)=\Re(-f)\]
+        \[\Im(f)=-\Im(f)\]
+        E quindi
+        \[X(-f)=\Re(-f)+i\Im(-f)=\Re(f)-i\Im(f)=X^*(f)\leftarrow\text{simmetria Hermitiana}\]
+        Questo ci farà comodo se \(x(t)\in\mathbb{R}\) è pari, in questo caso
+        \[\Im(f)=0\Rightarrow X(f)\in\mathbb{R}\text{ e pari}\]
+        Mentre se è dispari
+        \[\Re(f)=0\Rightarrow X(f)\in\mathbb{C}\setminus\mathbb{R}\text{ e dispari}\]
+    \item Trasformata di un segnale periodico
+        \[x(t)=\sum_{n\in\mathbb{Z}}c_n e^{2i\pi\frac{nt}{T}}\trasformata X(f)\xlongequal{\text{linearità}}\sum_{n\in\mathbb{Z}}c_n\delta\left(f-\frac{n}{T}\right)\]
+    \item Legame con i coefficienti di Fourier\accapo
+        i coefficienti di fourier possono essere calcolati come una trasformata di Fourier di un segnale uguale a quello originale ma diverso da 0 sono all'interno del suo periodo
+        \[\dot{x}(t)=x(t)rect\left(\frac{t}{T}\right)\]
+        \[c_n=\frac{1}{T}\int_{-\infty}^{+\infty}\dot{x}(t)e^{-2i\pi t\frac{n}{T}}dt=\frac{1}{T}\dot{X}\left(\frac{n}{T}\right)\]
+\end{enumerate}
+
+Trasformate notevoli\footnote{tabella riassuntiva all'ultima pagina del documento}
+\begin{itemize}
+    \item Delta
+        \[\delta(t)\trasformata 1\]
+    \item Delta traslata
+        \[\delta(t-t_0)=e^{-2i\pi f t_0}\text{ per la proprietà di traslazione nel tempo}\]
+    \item Rect
+        \[rect\left(\frac{t}{T}\right)\trasformata Tsinc(Tf)\]
+    \item Gaussiana
+        \[x(t)=e^{-\alpha t}\trasformata \sqrt{\frac{\pi}{\alpha}}e^{-\frac{\pi^2 f^2}{\alpha}}\]
+        Dimostrazione
+        \[x(t)\trasformata X(f)=\int_{-\infty}^{+\infty}e^{-\alpha t}e^{-i2\pi ft}dt=\int_{-\infty}^{+\infty}e^{-\alpha\left[t^2+i\frac{2\pi ft}{\alpha}+{\left(\frac{i\pi f}{\alpha}\right)}^2-{\left(\frac{i\pi f}{\alpha}\right)}^2\right]}dt=e^{-\frac{\pi^2 f^2}{\alpha^2}\alpha}\int_{-\infty}^{+\infty}e^{-\alpha{\left(t+i\frac{\pi f}{\alpha}\right)}^2}dt\]
+        \[\xRightarrow{t'=\sqrt{\alpha}\left(t+i\frac{\pi f}{\alpha}\right)}e^{-\frac{\pi^2 f^2}{\alpha^2}\alpha}\int_{-\infty}^{+\infty}e^{t'^2}\frac{dt'}{\sqrt{\alpha}}=\sqrt{\frac{\pi}{\alpha}}e^{-\frac{\pi^2 f^2}{\alpha}}\]
+        Allora \textbf{la gaussiana su Fourier si autotrasforma}\accapo
+        La gaussiana in forma canonica è
+        \[e^{-\frac{t^2}{2\sigma^2}}\]
+        Dove $\sigma$ è la deviazione standard, quindi abbiamo
+        \[\alpha=\frac{1}{2\sigma^2}\]
+    \item Esponenziale unilatero
+        \[x(t)=e^{-\alpha t}u(t)\trasformata \frac{1}{\alpha+2\pi if}\]
+        Dimostrazione
+        \[\Rightarrow X(f)=\int_=^{+\infty}e^{-\alpha t}e^{-i2\pi ft}dt=\frac{e^{-(\alpha+2\pi if)t}}{-\alpha-2\pi if}\Bigg|_0^{+\infty}=\frac{1}{\alpha+2\pi if}\]
+        Possiamo vedere che il modulo quadro è una Lorentziana
+        \[|X(f)|^2=\frac{1}{\alpha^2+4\pi^2 f^2}\]
+        \textbf{Esempi}:
+        \begin{itemize}
+            \item Possiamo sfruttare questa trasformata per fare quella dell'esponenziale bilatero
+                \[x_1(t)=e^{-\alpha|t|}\]
+                \[\Rightarrow x_1(t)=e^{-\alpha t}u(t)+e^{\alpha t}u(-t)=x(t)+x(-t)\trasformata X_1(f)=X(f)+X(-f)\text{ per la proprietà di scala}\]
+                \[\Rightarrow X_1(f)=\frac{1}{\alpha+2i\pi f}+\frac{1}{\alpha-2i\pi f}=\frac{2\alpha}{\alpha^2 4\pi^2 f^2}\]
+                Che è una Lorentziana canonica
+            \item Invece quella del segnale
+                \[x_2(t)=\frac{1}{\alpha+2i\pi t}\trasformata X_2(f)=e^{\alpha f}u(-f)\text{ per la proprietà di dualità}\]
+            \item Gradino
+                \[x_3(t)=u(t)=\lim_{\alpha\to0}e^{-\alpha t}u(t)\trasformata X_3(f)=\lim_{\alpha\to0}\frac{1}{\alpha+2i\pi f}=\frac{1}{2i\pi f}\]
+                Che però non è del tutto corretto dato ce in 0 questo esplode a infinito quindi c'è una $\delta$, per trovarla lo rifaccio razionalizzando
+                \[\frac{1}{\alpha+2i\pi f}=\frac{\alpha}{\alpha^2+e\pi^2 f^2}-\frac{2i\pi f}{\alpha^2+e\pi^2 f^2}\]
+                Ne calcolo l'ampiezza
+                \[A=\int_{-\infty}^{+\infty}\frac{\alpha}{\alpha^2+4\pi^2 f^2}df=\int_{-\infty}^{+\infty}\frac{1}{\alpha\left(+\frac{4\pi^2 f^2}{\alpha^2}\right)}\xlongequal{f'=\frac{2\pi f}{\alpha}}\frac{1}{\alpha}\int_{-\infty}^{+\infty}\frac{1}{1+f'^2}df'\frac{\alpha}{2\pi}=\frac{1}{2\pi}\arctan(f)\Big|_{-\infty}^{+\infty}=\]
+                \[=\frac{1}{2\pi}\left[\frac{\pi}{2}-\left(-\frac{\pi}{2}\right)\right]=\frac{1}{2}\]
+                \[\Rightarrow X_3(f)=\frac{1}{2}\delta(f)+\frac{1}{2i\pi f}\]
+            \item Funzione segno
+                \[x_4(t)=\begin{cases}
+                    1&t>0\\
+                    -1&t<0
+                \end{cases}=u(t)-u(-t)\trasformata X_4(f)=\frac{1}{2}\delta(f)+\frac{1}{2i\pi f}-\frac{1}{2}\delta(-f)+\frac{1}{2i\pi f}\xlongequal{\delta(f)=\delta(-f)}\frac{1}{i\pi f}\]
+        \end{itemize}
+    \item Tri
+        \[x(t)=tri\left(\frac{t}{T}\right)\trasformata\frac{\sin^2(\pi fT)}{\pi^2 f^2 T}\]
+        Dimostrazione
+        \[x(t)=tri\left(\frac{t}{T}\right)=\begin{cases}
+            1-\left|\frac{t}{T}\right|&-T\leq t\leq T\\
+            0&\text{altrove}
+        \end{cases}\xRightarrow{\frac{d}{dx}}\begin{cases}
+            \frac{1}{T}&0-T\leq t\leq 0\\
+            -\frac{1}{T}&0\leq t\leq T\\
+            0&\text{altrove}
+        \end{cases}\leftarrow\text{due rect}\]
+        \[\Rightarrow x'(t)=\frac{1}{T}rect\left(\frac{t+\frac{T}{2}}{T}\right)-\frac{1}{T}rect\left(\frac{t-\frac{T}{2}}{T}\right)\trasformata \frac{1}{\bcancel{T}}\bcancel{T}sinc(TF)e^{\bcancel{2}i\pi f\frac{T}{\bcancel{2}}}-\frac{1}{\bcancel{T}}\bcancel{T}sinc(TF)e^{-\bcancel{2}i\pi f\frac{T}{\bcancel{2}}}=\]
+        \[=sinc(TF)\sin(\pi fT)2i=\frac{\sin^2(\pi fT)}{\pi fT}2i\xRightarrow{X(f)=2i\pi fX'(f)} X(f)=\frac{\sin^2(\pi fT)\bcancel{2i}}{\pi fT}\frac{1}{\bcancel{2i}\pi f}=\frac{\sin^2(\pi fT)}{\pi^2 f^2 T}\]
+\end{itemize}
+Prendiamo un filtro
+\[x(t)\to\boxed{h(t)}\to y(t)=x(t)*h(t)\]
+Ma è difficile usare un impulso per trobare la risposta inpulsiva quindi mandiamo all'inizio un segnale sinusoidale che va come un coseno
+\[x(t)=e^{i2\pi f_0 t}\Rightarrow y(t)=\int_{-\infty}^{+\infty}h(\tau)e^{i2\pi f_0(t-\tau)}d\tau=e^{i2\pi f_0 t}\int_{-\infty}^{+\infty}h(\tau)e^{-i2\pi f_0 \tau}d\tau=H(f_0)e^{i2\pi f_0 t}\]
+Dove \(H(f_0)\) è la \textbf{funzione di trasferimento} calcolata in \(f=f_0\), a questo punto possiamo usare il teorema della convoluzione per calcolare più facilmente l'uscita del filtro.\accapo
+La trasformata di Fourier (o spettro del segnale) è spesso complessa, se ne studio il modulo sto studiando lo spettro in ampiezza mentre se ne studio la fase sto studiando lo spettro di fase del segnale.\accapo
+Un segnale in banda base è un segnale intorno all'asse y mentre un segnale modulato è un segnale simmetrico rispetto a questo asse con un elemento intorno a $f_0$ e uno intorno a $-f_0$ dove $f_0$ è la \textbf{frequenza portante}.\accapo
+Consideriamo un sistema tempo-discreto
+\[x[n]\to\boxed{h[n]}\to y[n]\]
+E prendiamo
+\[x[n]=\delta[n]\to\boxed{h[n]}\to y[n]=h[n]\]
+Quindi
+\[y[n]=x[n]*h[n]\]
+Supponiamo
+\[x[n]=e^{2i\pi f_0 nT}\Rightarrow y[n]=h[n]*e^{2i\pi f_0 nT}=\sum_{k\in\mathbb{Z}}h[k]e^{2i\pi f_0(n-k)T}=e^{2i\pi f_0 nT}\sum_{k\in\mathbb{Z}}h[k]e^{-2i\pi f_0 kT}=\]
+\[=e^{2i\pi f_0 nT}H(f_0)\]
+Allora
+\LARGE\[x[n]\trasformata X(f)=\sum_{n\in\mathbb{Z}}x[n]e^{-2i\pi fnT}\]\normalsize
+Dove \(X(f)\) è periodica di periodo \(\frac{1}{T}\) infatti
+\[X\left(f-\frac{1}{T}\right)=\sum_{n\in\mathbb{Z}}x[n]e^{-2i\pi \left(f-\frac{1}{T}\right)nT}=\sum_{n\in\mathbb{Z}}x[n]e^{-2i\pi fnT}e^{2i\pi n}\xlongequal{e^{2i\pi n}=1}\sum_{n\in\mathbb{Z}}x[n]e^{-2i\pi fnT}=X(f)\]
+Spesso si usa una frequenza normalizzata per la rappresentazione
+\[\phi=Tf\Rightarrow X(\phi)=\sum_{n\in\mathbb{Z}}e^{-2i\pi n\phi}\]
+E questa è periodica di periodo 1, possiamo inoltre vedere che la definizione di trasformata di un segnale tempo-discreto ci da anche la serie di Fourier della trasformata i qui coefficienti sono il segnale di partenza, da qui possiamo vedere che
+\LARGE\[X(f)\antitrasformata x[n]=T\int_{-\frac{1}{2T}}^{\frac{1}{2T}}X(f)e^{2i\pi nfT}df\]\normalsize\accapo
+Proprietà\footnote{tabella riassuntva alla penultima pagina del documento}:
+\begin{enumerate}
+    \item Valor medio
+        \[X(0)=\sum_{n\in\mathbb{Z}}x[n]\]
+    \item duale del valor medio
+        \[x[0]=T\int_{-\frac{1}{2T}}^{\frac{1}{2T}}X(f)df\]
+    \item Traslazione nel tempo
+        \[x[n-n_0]\trasformata X(f)e^{-2i\pi n_0 fT}\]
+        \[x[n-n_0]\trasformata\sum_{n\in\mathbb{Z}}x[n-n_0]e^{-2i\pi fnT}\xlongequal{n'=n-n_0}\sum_{n'\in\mathbb{Z}}x[n']e^{-2i\pi fn'T}e^{-2i\pi n_0 fT}=X(f)e^{-2i\pi n_0 fT}\]
+    \item Traslazione in frequenza
+        \[x[n]e^{2i\pi f_0 nT}\trasformata X(f-f_0)\]
+        \[x[n]e^{2i\pi f_0 nT}\trasformata\sum_{n\in\mathbb{Z}}x[n]e^{i2\pi f_0 nT}e^{-2i\pi fnT}=\sum_{n\in\mathbb{Z}}x[n]e^{-2i\pi(f-f_0)nT}=X(f-f_0)\]
+    \item Teorema della convoluzione
+        \[x[n]*h[n]\trasformata X(f)H(f)\]
+        \[\sum_{k\in\mathbb{Z}}x[k]h[n-k]\trasformata \sum_{n\in\mathbb{Z}}\sum_{k\in\mathbb{Z}}x[k]h[n-k]e^{-i2\pi nfT}\xlongequal{n'=n-k}\sum_{k\in\mathbb{Z}}x[k]\sum_{n'\in\mathbb{Z}}h[n']e^{-2i\pi n'fT}e^{-2i\pi kfT}=\]
+        \[=\sum_{k\in\mathbb{Z}}x[k]e^{-2i\pi kfT}H(f)=X(f)H(f)\]
+    \item Opposta del teorema della convoluzione
+        \[x[n]h[n]\trasformata T\int_{-\frac{1}{2T}}^\frac{1}{2T}X(\theta)H(f-\theta)d\theta\]
+        \[x[n]h[n]\trasformata\sum_{n\in\mathbb{Z}}x[n]h[n]e^{-2i\pi nfT}=\sum_{n\in\mathbb{Z}}h[n]e^{-2i\pi nfT}T\int_{-\frac{1}{2T}}^{\frac{1}{2T}}X(\theta)e^{2i\pi n\theta T}d\theta=\]
+        \[=T\int_{-\frac{1}{2T}}^\frac{1}{2T}X(\theta)\sum_{n\in\mathbb{Z}} h[n]e^{-2i\pi (f-\theta)nT}d\theta=T\int_{-\frac{1}{2T}}^\frac{1}{2T}X(\theta)H(f-\theta)d\theta\leftarrow\text{convoluzione circolare}\]
+
+        Dimostriamo la convoluzioen circolare
+        \[X(f)=\sum_{n\in\mathbb{Z}}\overline{X}\left(f-\frac{n}{T}\right)\hspace{2cm}H(f)=\sum_{k\in\mathbb{Z}}\overline{H}\left(f-\frac{k}{T}\right)\]
+        \[\overline{X}(f)*\overline{H}(f)=\int_{-\infty}^{+\infty}\overline{X}(\theta)\overline(H)(f-\theta)d\theta\]
+        \[X(f)\text{ convoluzione circolare }H(f)=T\int_{-\frac{1}{2T}}^{\frac{1}{2T}}X(\theta)H(f-\theta)d\theta=\]
+        \[T\sum_{n\in\mathbb{Z}}\sum_{k\in\mathbb{Z}}\int_{-\frac{1}{2T}}^{\frac{1}{2T}}\overline{X}\left(\theta-\frac{n}{T}\right)\overline{H}\left(f-\theta-\frac{k}{T}\right)d\theta\xlongequal{\theta'=\theta-\frac{n}{T}}T\sum_{n\in\mathbb{Z}}\sum_{k\in\mathbb{Z}}\int_{-\frac{1}{2T}-\frac{n}{T}}^{\frac{1}{2T}-\frac{n}{T}}\overline{X}(\theta')\overline{H}\left(f-\theta'-\frac{k+n}{T}\right)d\theta'=\]
+        \[=T\sum_{k\in\mathbb{Z}}\int_{-\frac{1}{2T}}^\frac{1}{2T}\overline{X}(\theta')\overline{H}\left(f-\theta'-\frac{k}{T}\right)d\theta'=T\sum_{k\in\mathbb{Z}}\int_{-\infty}^{+\infty}\overline{X}(\theta')\overline{H}\left(f-\theta'-\frac{k}{T}\right)d\theta'=T\sum_{k\in\mathbb{Z}}\overline{Y}\left(f-\frac{k}{T}\right)\]
+    \item Trasformata delcomplessso coniugato
+        \[y^*[n]\trasformata Y^*(-f)\]
+        \[y^*[n]\trasformata=\sum_{n\in\mathbb{Z}}y^*[n]e^{-2i\pi nfT}={\left[\sum_{n\in\mathbb{Z}}y[n]e^{i2\pi nfT}\right]}^*=Y^*(-f)\leftarrow\text{simmetria Hermitiana}\]
+    \item Teorema di Parseval
+        \[E_x=T\int_{-\frac{1}{2T}}^\frac{1}{2T}|X(f)|^2df\]
+        Dalla proprietà 6
+        \[\sum_{n\in\mathbb{Z}}y[n]x[n]e^{-2i\pi nfT}=T\int_{-\frac{1}{2T}}^\frac{1}{2T}Y(\theta)X(f-\theta)d\theta\]
+        Metto \(f=0\)
+        \[\sum_{n\in\mathbb{Z}}y[n]x[n]=T\int_{-\frac{1}{2T}}^\frac{1}{2T}Y(\theta)X(-\theta)d\theta\Rightarrow\sum_{n\in\mathbb{Z}}y^*[n]x[n]=T\int_{-\frac{1}{2T}}^{\frac{1}{2T}}X(-\theta)Y^*(-\theta)d\theta\Rightarrow\sum_{n\in\mathbb{Z}}|x[n]|^2=\]
+        \[=T\int_{-\frac{1}{2T}}^\frac{1}{2T}|X(f)|^2df=E_x\]
+    \item Trasformata della correlazione
+        \[R_{xy}[n]=x[n]\otimes y[n]=\sum_{k\in\mathbb{Z}}x[n-k]y^*[k]\trasformata X(f)Y^*(f)\]
+        \[\sum_{k\in\mathbb{Z}}x[n-k]y^*[k]\trasformata\sum_{n\in\mathbb{Z}}\sum{k\in\mathbb{Z}}x[n-k]y^*[k]e^{-2i\pi nfT}\xlongequal{n'=n+k}\sum_{k\in\mathbb{Z}}y^*[k]\sum_{n'\in\mathbb{Z}}x[n']e^{-2i\pi n' fT}e^{2i\pi kfT}=\]
+        \[=X(f)\sum_{k\in\mathbb{Z}}y^*[k]e^{2i\pi kfT}=X(f)Y^*(f)\leftarrow\text{crosscorrelazione}\]
+    \item Trasformata dell'autocorrelazione
+        \[x[n]\otimes x[n]=|X(f)|^2\]
+\end{enumerate}
+Esempi:
+\begin{enumerate}
+    \item \[x[n]=\delta[n]\]
+        \[X(f)=\sum_{n\in\mathbb{Z}}\delta[n]e^{-2i\pi fnT}=1\]
+    \item \[x[n]=\begin{cases}
+        1&0\leq n<N\\
+        0&\text{altrove}
+    \end{cases}\leftarrow\text{rect tempo-discreta}\]
+        \[X(f)=\sum_{n=0}^{N-1}1\cdot e^{-2i\pi fnT}=1+e^{-2i\pi ft}+e^{-4i\pi fT}+\cdots+e^{-i(N-1)2\pi fT}\xlongequal{1+x+x^2+\cdots+x^{N-1}=\frac{1-x^N}{1-x}}\frac{1-e^{-2i\pi NfT}}{1-e^{-2i\pi fT}}=\]
+        \[=\frac{e^{-i\pi NfT}}{e^{-i\pi fT}}\frac{e^{i\pi fNT}-e^{-i\pi fNT}}{e^{i\pi fT}-e^{-i\pi fT}}=e^{-i\pi(N-1)fT}\frac{\sin(\pi fNT)}{\sin(\pi fT)}\]
+        \[|X(f)|=\frac{\sin(\pi fNT)}{\sin(\pi fT)}\leftarrow\text{dinc}\leftarrow\text{digital sinc}\]
+    \item \[x[n]=\delta[n]+\delta[n-1]\leftarrow\text{caso particolare dell'esempio precedente con }N=2\]
+        \[X(f)=1+e^{-2i\pi fT}=e^{-i\pi fT}(e^{i\pi fT}+e^{-i\pi fT})=2e^{-i\pi fT}\cos(\pi fT)\leftarrow\text{filtro passa-basso}\]
+        \[|X(f)|=2|\cos(\pi fT)|\]
+    \item \[x[n]=\delta[n]-\delta[n-1]\]
+        \[X(f)=1-e^{-2i\pi fT}=e^{-i\pi fT}(e^{i\pi fT}-e^{-i\pi fT})=2ie^{-i\pi fT}\sin(\pi fT)\leftarrow\text{filtro passa-alto}\]
+    \item \[X(f)=rect\left(\frac{f}{2f_c}\right)\antitrasformata x[n]=?\]
+        Ma \(X(f)\) non può essere la trasformata di una sequenza perché non è periodica, quindi dovrebbe essere un treno di rect, la riscrivo quindi così
+        \[X(f)=\sum_{k\in\mathbb{Z}}rect\left(\frac{f+\frac{k}{T}}{2f_c}\right)\]
+        E procedo
+        \[x[n]=T\int_{-\frac{1}{2T}}^{\frac{1}{2T}}rect\left(\frac{f}{2f_c}\right)e^{i2\pi nfT}df=T\int_{-f_c}^{f_c}e^{2i\pi nfT}df=\bcancel{T}\frac{e^{2i\pi nfT}}{2i\pi n\bcancel{T}}\Bigg|_{-f_c}^{f_c}=\frac{\sin(2\pi nf_c T)}{\pi n}=2f_c Tsinc(2\pi f_c T)\]
+\end{enumerate}
+
+Richiami delle serie di Fourier
+\[\text{Treno di delta o treno campionatore }\pi(t)=\sum_{n\in\mathbb{Z}}\delta(t-nT)=\sum_{k\in\mathbb{Z}}c_k e^{i2\pi n\frac{t}{T}}\]
+Dove
+\[c_k=\frac{1}{T}\int_{-\frac{T}{2}}^{\frac{T}{2}}\pi(t)e^{-i2\pi n\frac{t}{T}}dt=\frac{1}{T}\int_{-\frac{T}{2}}^\frac{T}{2}\delta(t)e^{-i2\pi n\frac{t}{T}}dt=\frac{1}{T}\int_{-\frac{T}{2}}^\frac{T}{2}\delta(t)dt=\frac{1}{T}\]
+Ora voglio vedere il suo spettro
+\[\Pi(f)=\begin{cases}
+    \sum_{n\in\mathbb{Z}}e^{-i2\pi nTf}&\text{trasformando la definizione}\\
+    \sum_{k\in\mathbb{Z}}\frac{1}{T}\delta\left(f-\frac{k}{T}\right)&\text{trasformando la serie di Fourier}
+\end{cases}\]
+\newpage\LARGE
+\begin{center}
+    Proprietà della trasformata di Fourier tempo-continua\\\scriptsize\hspace*{1cm}\\\large
+    {\renewcommand{\arraystretch}{2}
+        \begin{tabular}{|c|c|}
+            \hline
+            Proprietà&Enunciato\\
+            \hline
+            Duale&\(X(t)\trasformata x(-f)\)\\
+            \hline
+            Scala&\(x(\alpha t)\trasformata\frac{1}{|\alpha|}X\left(\frac{f}{\alpha}\right)\)\\
+            \hline
+            Traslazione nel tempo&\(x(t-t_0)\trasformata e^{-2i\pi ft_0}X(f)\)\\
+            \hline
+            \begin{tabular}{c}
+                traslazione in frequenza\\
+                o modulazione
+            \end{tabular}&\(x(t)e^{2i\pi f_0 t}\trasformata X(f-f_0)\)\\
+            \hline
+            Derivazione&\(\frac{d}{dt}x(t)\trasformata2i\pi fX(f)\)\\
+            \hline
+            Duale della derivazione&\(2i\pi t\cdot x(t)\trasformata\frac{d}{df}X(f)\)\\
+            \hline
+            Teorema della convoluzione&\(x(t)*y(t)\trasformata X(f)Y(f)\)\\
+            \hline
+            Integrazione&\(\int_{-\infty}^t x(\tau)d\tau\trasformata \frac{X(0)}{2}\delta(f)+\frac{X(f)}{2i\pi f}\)\\
+            \hline
+            Complesso coniugato&\(x^*(t)\trasformata X^*(-f)\)\\
+            \hline
+            Correlazione&\(x(t)\otimes y(t)\trasformata X(f)Y^*(f)\)\\
+            \hline
+            Teorema di Parseval&\(E_x=\int_{-\infty}^{+\infty}|X(f)|^2 df\)\\
+            \hline
+            Trasformata di un segnale Reale&\(\begin{matrix}
+                \Re(f)=\Re(-f)\\
+                \Im(f)=-\Im(f)\\
+                X(f)=X(-f)
+            \end{matrix}\)\\
+            \hline
+            Trasformata di un segnale periodico&\(X(f)=\sum_{n\in\mathbb{Z}}c_n\delta\left(f-\frac{n}{T}\right)\)\\
+            \hline
+            Legame con i coefficienti di Fourier&\(\begin{matrix}
+                \dot{x(t)}=x(t)rect\left(\frac{t}{T}\right)\\
+                c_n=\frac{1}{T}\dot{X}\left(\frac{n}{T}\right)
+            \end{matrix}\)\\
+            \hline
+        \end{tabular}
+    }
+\end{center}
+
+\newpage\LARGE
+\begin{center}
+    Proprietà della trasformata di Fourier tempo-discreta\\\scriptsize\hspace*{1cm}\\\Large
+    {\renewcommand{\arraystretch}{2}
+        \begin{tabular}{|c|c|}
+            \hline
+            Proprietà&Enunciato\\
+            \hline
+            Valor medio&\(X(0)=\sum_{n\in\mathbb{Z}}x[n]\)\\
+            \hline
+            Duale del valoer medio&\(x[0]=T\int_{-\frac{1}{2T}}^{\frac{1}{2T}}X(f)df\)\\
+            \hline
+            Traslazione nel tempo&\(x[n-n_0]\trasformata X(f)e^{-2i\pi n_0 fT}\)\\
+            \hline
+            Traslazione in frequenza&\(x[n]e^{2i\pi f_0 nT}\trasformata X(f-f_0)\)\\
+            \hline
+            Teorema della convoluzione&\(x[n]*y[n]\trasformata X(f)Y(f)\)\\
+            \hline
+            Opposta del toerema della convoluzione&\(x[n]y[n]\trasformata T\int_{-\frac{1}{2T}}^\frac{1}{2T}X(\theta)Y(f-\theta)d\theta\)\\
+            \hline
+            Trasformata del complesso coniugato&\(x^*[n]\trasformata X^*(-f)\)\\
+            \hline
+            Teorema di Parseval&\(E_x=T\int_{-\frac{1}{2T}}^\frac{1}{2T}|X(f)|^2df\)\\
+            \hline
+            Trasformata della correlazione&\(x[n]\otimes y[n]\trasformata X(f)Y^*(f)\)\\
+            \hline
+            Trasformata dell'autocorrelazione&\(x[n]\otimes x[n]=|X(f)|^2\)\\
+            \hline
+        \end{tabular}
+    }
+\end{center}
+
+\newpage\huge
+\begin{center}
+    Trasformate notevoli\\\scriptsize\hspace*{1cm}\\\huge
+    {\renewcommand{\arraystretch}{2}
+        \begin{tabular}{|c|c|}
+            \hline
+            \(x(t)\)&\(X(f)\)\\
+            \hline
+            \(\delta(t)\)&1\\
+            \hline
+            \(\delta(t-t_0)\)&\(e^{-2i\pi f t_0}\)\\
+            \hline
+            \(rect\left(\frac{t}{T}\right)\)&\(Tsinc(Tf)\)\\
+            \hline
+            \(e^{-\alpha t}\)&\(\sqrt{\frac{\pi}{\alpha}}e^{-\frac{\pi^2 f^2}{\alpha}}\)\\
+            \hline
+            \(e^{-\alpha t}u(t)\)&\(\frac{1}{\alpha+2i\pi f}\)\\
+            \hline
+           \(e^{-\alpha|t|}\)&\(\frac{2\alpha}{\alpha^2 4\pi^2 f^2}\)\\
+            \hline
+            \(\frac{1}{\alpha+2i\pi f}\)&\(e^{\alpha f}u(-f)\)\\
+           \hline
+            \(u(t)\)&\(\frac{1}{2}\delta(f)+\frac{1}{2i\pi f}\)\\
+            \hline
+            \(u(t)-u(-t)\)&\(\frac{1}{i\pi f}\)\\
+            \hline
+            \(tri\left(\frac{t}{T}\right)\)&\(\frac{\sin^2(\pi fT)}{\pi^2 f^2 T}\)\\
+            \hline
+        \end{tabular}
+    }
+\end{center}
+
+\end{document}

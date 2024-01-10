@@ -1,0 +1,65 @@
+\documentclass{article}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{extarrows}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usepackage{cancel}
+\usetikzlibrary{shapes,arrows}
+
+\newcommand{\accapo}{\\\hspace*{1cm}\\}
+\newcommand{\Eaccentata}{$\grave{\text{E}}$ }
+\newcommand{\vopen}{``}
+\newcommand{\vclose}{''}
+\newcommand{\vclosespace}{'' }
+\newcommand{\trasformata}{\xrightarrow{\mathscr{F}}}
+\newcommand{\antitrasformata}{\xrightarrow{-\mathscr{F}}}
+
+\setlength{\parindent}{0cm}
+% chktex-file 44
+% chktex-file 36
+% chktex-file 1
+\hfuzz=100pt
+
+\title{Esercizi sulla trasformata Fourier\\\normalsize fondamenti di telecomunicazioni}
+\author{Flavio Colacicchi}
+\date{14/11/2023}
+\begin{document}
+\maketitle
+\begin{enumerate}
+    \item \[x(t)=\frac{A}{2}rect\left(\frac{t}{T}\right)-\frac{A}{T}t\ rect\left(\frac{t}{T}\right)\]
+        \[\frac{dx(t)}{dt}=x'(t)=A\delta\left(t+\frac{T}{2}\right)-\frac{A}{T}rect\left(\frac{t}{T}\right)\trasformata X'(f)=Ae^{2i\pi f\frac{T}{2}}-\frac{A}{\bcancel{T}}\bcancel{T}sinc(Tf)=2i\pi fX(f)\]
+        \[\Rightarrow X(f)=\frac{X'(f)}{2i\pi f}=\frac{A}{2i\pi f}\left[e^{i\pi fT}-sinc(Tf)\right]\]
+    \item \[Y(f)=\frac{1}{2}\left[X(f-f_0)+X(f+f_0)\right]\cos\left(\frac{2\pi f}{f_0}\right)\]
+        \[y(t)=\left[\frac{1}{2}x(t)e^{2i\pi f_0 t}+\frac{1}{2}x(t)e^{-2i\pi f_0 t}\right]*\left[\frac{1}{2}\delta\left(t-\frac{1}{f_0}\right)+\frac{1}{2}\left(t+\frac{1}{f_0}\right)\right]=\]
+        \[=x(t)\cos(2\pi f_0 t)*\left[\frac{1}{2}\delta\left(t-\frac{1}{f_0}\right)+\frac{1}{2}\left(t+\frac{1}{f_0}\right)\right]=\]
+        \[=\frac{1}{2}x\left(t-\frac{1}{f_0}\right)\cos\left[2\pi f_0\left(t-\frac{1}{f_0}\right)\right]+\frac{1}{2}x\left(t+\frac{1}{f_0}\right)\cos\left[2\pi f_0\left(t+\frac{1}{f_0}\right)\right]=\]
+        \[=\frac{1}{2}\left[x\left(t-\frac{1}{f_0}\right)+x\left(t+\frac{1}{f_0}\right)\right]\cos(2\pi f_0 t)\]
+    \item \[x(t)=rect(2t)-rect\left[4\left(t+\frac{3}{8}\right)\right]-rect\left[4\left(t-\frac{3}{8}\right)\right]\trasformata\]
+        \[\trasformata X(f)=\frac{1}{2}sinc\left(\frac{f}{2}\right)-\frac{1}{4}sinc\left(\frac{f}{4}\right)e^{-2i\pi\frac{3}{8}f}-\frac{1}{4}sinc\left(\frac{f}{4}\right)e^{2i\pi\frac{3}{8}f}=\]
+        \[\xlongequal{\text{formule di triplicazione del coseno}}\frac{1}{2}\left[sinc\left(\frac{f}{2}\right)-sinc\left(\frac{f}{4}\right)\cos\left(\frac{3\pi f}{4}\right)\right]\]
+    \item \[x(t)=\sum_{n\in\mathbb{Z}}rect\left(\frac{t-nT}{T}\right)\]
+        \[c_n=\frac{\tau}{T}sinc\left(\frac{\tau n}{T}\right)\]
+        \[\Rightarrow X(f)=\sum_{n\in\mathbb{Z}}\frac{\tau}{T}sinc\left(\frac{\tau n}{T}\right)\delta\left(f-\frac{n}{T}\right)\]
+    \item \[\pi(t)=\sum_{n\in\mathbb{Z}}\delta(t-nT)\]
+        \[c_n=\frac{1}{T}\]
+        \[\Rightarrow \Pi(f)=\frac{1}{T}\sum_{n\in\mathbb{Z}}\delta\left(f-\frac{n}{T}\right)\]
+        Quindi il pettine (o treno campionatore) si autotrasforma
+    \item Treno di trapezi
+        \[\dot{x}=2rect\left(\frac{2t}{3T}\right)*rect\left(\frac{2t}{T}\right)\]
+        \[\overline{T}=\frac{5}{2}T\]
+        \[c_n=2\frac{1}{\overline{T}}\frac{3T}{2}sinc\left(\frac{3T}{2}\frac{n}{\overline{T}}\right)\frac{T}{2}sinc\left(\frac{T}{2}\frac{n}{\overline{T}}\right)=\frac{3T}{5}sinc\left(\frac{3n}{2}\right)sinc\left(\frac{n}{2}\right)\]
+        \[\Rightarrow X(f)=\frac{3T}{5}\sum_{n\in\mathbb{Z}}sinc\left(\frac{3n}{2}\right)sinc\left(\frac{n}{2}\right)\delta\left(f-\frac{n}{T}\right)\]
+    \item \[x(t)=[\cos(2\pi f_0 t)\sin(2\pi f_0 t)]*\frac{\sin(3\pi f_0 t)}{\pi t}=\frac{1}{2}\sin(4\pi f_0 t)*3f_0 sinc(3f_0 t)\]
+        \[X(f)=\frac{1}{4}\left[\frac{\delta(f-2f_0)}{i}-\frac{\delta(f+2f_0)}{i}\right]\frac{\bcancel{3f_0}}{\bcancel{3f_0}}rect\left(\frac{f}{3f_0}\right)=\frac{1}{4i}\left[\delta(f-2f_0)rect\left(\frac{2\bcancel{f_0}}{3\bcancel{f_0}}\right)-\delta(f+2f_0)rect\left(-\frac{2\bcancel{f_0}}{3\bcancel{f_0}}\right)\right]=\]
+        \[=\frac{1}{4i}rect\left(\frac{2}{3}\right)\left[\delta(f-2f_0)-\delta(f+f_0)\right]\xlongequal{rect\left(\frac{2}{3}\right)=0}0\Rightarrow x(t)=0\]
+\end{enumerate}
+
+\end{document}

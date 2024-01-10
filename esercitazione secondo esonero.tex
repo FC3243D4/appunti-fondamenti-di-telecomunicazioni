@@ -1,0 +1,110 @@
+\documentclass{article}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{extarrows}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usepackage{cancel}
+\usetikzlibrary{shapes,arrows}
+
+\newcommand{\accapo}{\\\hspace*{1cm}\\}
+\newcommand{\Eaccentata}{$\grave{\text{E}}$ }
+\newcommand{\vopen}{``}
+\newcommand{\vclose}{''}
+\newcommand{\vclosespace}{'' }
+\newcommand{\trasformata}{\xrightarrow{\mathscr{F}}}
+\newcommand{\antitrasformata}{\xrightarrow{\mathscr{F}^{-1}}}
+\newcommand{\intfity}{\int_{-\infty}^{+\infty}}
+
+\setlength{\parindent}{0cm}
+% chktex-file 44
+% chktex-file 36
+% chktex-file 1
+\hfuzz=100pt
+
+\title{Esercitazione per il secondo esonero\\\normalsize fondamenti di telecomunicazioni}
+\author{Flavio Colacicchi}
+\date{09/01/2024}
+\begin{document}
+\maketitle
+Date 3 variabili aleatorie indipendenti \(A,B,\Theta\) calcolare il valore medio e la densità di potenza del segnale
+\[x(t)=(A+2B)\cos(300\pi t-\Theta)+n(t)\]
+\[P_A(a)=\text{rect che inizia a -1 e finisce a 1 e ha altezza }\frac{1}{2}\]
+\[P_B(b)=\text{rect che inizia a -2 e finisce a 2 e ha altezza }\frac{1}{4}\]
+\[P_\Theta(\theta)=\text{rect che inizia a 0 e finisce a 4$\pi$ e ha altezza }\frac{1}{4\pi}\]
+\[R_n(\tau)=10\delta(\tau)\hspace{1cm}G_n(f)=10\hspace{1cm}P_n=\int_{-\infty}^{+\infty}G_n(f)df=10\delta(0)=R_n(0)\]
+\[E[x(t)]=E[(A+2B)\cos(300\pi t-\Theta)+n(t)]=E[(A+2B)\cos(200\pi t-\Theta)]+E[n(t)]\]
+Ricordiamo
+\[E[n(t)]=\mu_n=0\Rightarrow\mu_x=\int_{-\infty}^{+\infty}xP_X(x)dx=\int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}xP_{XY}(x,y)dxdy=\int_{-\infty}^{+\infty}xP_X(x)dx=\int_{-\infty}^{+\infty}P_Y(y)\]
+Allora
+\[E[x(t)]=(E[A]+2E[B])E[\cos(300\pi t-\Theta)]\]
+\[\mu_A=E[A]=\int_{-\infty}^{+\infty}aP_A(a)da=\int_{-1}^1\frac{1}{2}da=0\]
+\[\mu_B=E[B]=\int_{-2}^2\frac{1}{4}db=0\]
+\[\Rightarrow E[x]=0\]
+\[\text{funzione di autocorrelazione}\trasformata R_x(\tau)=E[x(t+\tau)x(t)]=\]
+\[=E[(A+2B)\cos(300\pi(t+\tau)-\Theta)+n(t+\tau)(A+2B)\cos(300\pi t-\Theta)+n(t)]=\]
+\[=E[{(A+2B)}^2\cos(300\pi(t-\tau)-\Theta)\cos(300\pi t-\Theta)+(A+2B)\cos(300\pi r-\Theta)n(t+\tau)+\]
+\[+(A+2B)\cos(300\pi(t-\tau)-\Theta)n(t)+n(t+\tau)n(t)]\]
+Dato che le probabilità sono indipendenti
+\[=E[{(A+2B)}^2]E[\cos(300\pi(t-\tau)-\Theta)\cos(300\pi t-\Theta)]+E[(A+2B)\cos(300\pi t-\Theta)n(t+\tau)]+\]
+\[+E[(A+2B)\cos(300\pi(t-\tau)-\Theta)n(t)]+E[n(t+\tau)n(t)]\]
+procediamo uno alla volta
+\[E[{(A+2B)}^2]=E[A^2]+4E[B^2]+4E[A]E[B]\xlongequal{E[A]=E[B]=0}=E[A^2]+E[B^2]\]
+\[E[A^2]=\int_{-\infty}^{+\infty}a^2P_A(a)da=\int_{-1}^1a^2\frac{1}{2}da=\frac{a^3}{6}\Big|_{-1}^1=\frac{1}{3}\]
+\[E[B^2]=\int_{-2}^2b^2\frac{1}{4}db=\frac{b^3}{12}\Big|_{-2}^2=\frac{16}{12}=\frac{4}{3}\]
+Poi
+\[E[\cos(300\pi(t-\tau)-\Theta)\cos(300\pi t-\Theta)]=\int_0^{4\pi}\frac{1}{4\pi}\cos[300\pi(t+\tau)-\Theta]\cos(300\pi-\Theta)d\Theta=\]
+\[=\frac{1}{8\pi}\int_0^{4\pi}\cos[300\pi(2t+\tau)-2\Theta]d\Theta+\frac{1}{8\pi}\int_0^{4\pi}\cos[300\pi\tau]d\Theta\xlongequal{\text{il primo integrale è sul periodo}}\frac{1}{2}\cos(300\pi\tau)\]
+Poi
+\[E[(A+2B)\cos(300\pi t-\Theta)n(t+\tau)]\]
+\[E[A+2B]=0\Rightarrow E[(A+2B)\cos(300\pi t-\Theta)n(t+\tau)]=0\]
+Poi
+\[E[(A+2B)\cos(300\pi(t-\tau)-\Theta)n(t)]\]
+\[E[A+2B]=0\Rightarrow E[(A+2B)\cos(300\pi(t-\tau)-\Theta)n(t)]=0\]
+Poi
+\[E[n(t+\tau)n(t)]=R_n(\tau)\]
+Allora
+\[R_x(\tau)=\left(\frac{1}{3}+4\frac{4}{3}\right)\frac{1}{2}\cos(300\pi t)+10\delta\trasformata G_x(f)=\frac{17}{12}[\delta(f-150)+\delta(f+150)]+10\]
+\newpage
+\[y(t)=\int_{t-T}^{t+T}x(t')dt'\]
+\[G_y(f)=?\hspace{2cm}G_x(f)=?\]
+\[y(t)=\int_{-\infty}^{+\infty}x(t')rect\left(\frac{t-t'}{2T}\right)=x(t)*h(t)=x(t)*rect\left(\frac{t}{2T}\right)\]
+Ricordiamo
+\[G_y(f)=|H(f)|^2G_x(f)\]
+\[H(f)=2Tsic(2Tf)\Rightarrow G_y(f)=G_x(f)4T^2sinc^2(2Tf)\]
+Calcolare la potenza del segnale nel caso in cui \(G_x(f)=\frac{N_0}{2}\)\\
+Quindi possiamo fare
+\[P_y=\intfity G_y(f)df=\intfity \frac{N_0}{2}4T^2sinc^2(2Tf)f\]
+Oppure possiamo usare
+\[P_y=R_y(0)\]
+\[R_y(\tau)=\frac{N_0}{2}2Ttri\left(\frac{\tau}{2T}\right)\Rightarrow P_y=N_0T\]
+\newpage
+\[y(t)=4x(t-3)+4x(t+3)\]
+\[\mu_x=0\hspace{2cm}R_x(\tau)=3e^{-|t|}\]
+\[G_y(f)=?\hspace{2cm}\mu_y=?\hspace{2cm}R_y=?\hspace{2cm}P_y=?\]
+\[\mu_y=e[y(t)]=4E[x(t-3)]+4E[x(t+3)]\xlongequal{\mu_x=0}0\]
+\[E[y(t+\tau)y(t)]=E[(4x(t+\tau-3)+4x(t+\tau+3))(4x(t-3)+4x(t+3))]=\]
+\[=16E[x(t+\tau-3)x(t-3)]+16E[x(t+\tau-3)x(t+3)]+16E[x(t+\tau+3)x(t-3)]+16E[x(t+\tau+3)x(t+3)]=\]
+\[16R_x(\tau)+16R_x(\tau-6)+16R_x(\tau+6)+16R_x(\tau)=32R_x(\tau)+16R_x(\tau-6)+16R_x(\tau+6)\]
+\[\Rightarrow R_y(\tau)=96e^{-|\tau|}+48e^{-|\tau-6|}+48e^{-|\tau+6|}\]
+Ora calcoliamo la potenza
+\[P_y=R_y(0)=96(1+e^{-6})\]
+E infine possiamo calolare \(G_y(f)\) e ho due possibilità:
+\begin{itemize}
+    \item \(R_y(\tau)\trasformata G_y(f)\)
+    \item \(G_y(f)=|H(f)|^2G_x(f)\)
+\end{itemize}
+Dato che
+\[y(t)=x(t)*[4\delta(t-3)+4\delta(t+3)]\]
+Procedo con la seconda
+\[h(t)=4\delta(t-3)+4\delta(t+3)\trasformata H(f)=8\cos(6\pi f)\]
+\[R_x(f)=3e^{-|t|}\trasformata G_x(f)=\frac{3}{1+i2\pi f}+\frac{3}{1-i2\pi f}=\frac{6}{12+\pi^2f^2}\]
+\[\Rightarrow G_y(f)=64\cos^2(6\pi f)\frac{6}{1+4\pi^2f^2}\]
+\end{document}

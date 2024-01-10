@@ -1,0 +1,103 @@
+\documentclass{article}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{extarrows}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usepackage{cancel}
+\usetikzlibrary{shapes,arrows}
+
+\newcommand{\accapo}{\\\hspace*{1cm}\\}
+\newcommand{\Eaccentata}{$\grave{\text{E}}$ }
+\newcommand{\vopen}{``}
+\newcommand{\vclose}{''}
+\newcommand{\vclosespace}{'' }
+\newcommand{\trasformata}{\xrightarrow{\mathscr{F}}}
+\newcommand{\antitrasformata}{\xrightarrow{\mathscr{F}^{-1}}}
+\newcommand{\intfity}{\int_{-\infty}^{+\infty}}
+
+\setlength{\parindent}{0cm}
+% chktex-file 44
+% chktex-file 36
+% chktex-file 1
+\hfuzz=100pt
+
+\title{Orale\\\normalsize fondamenti di telecomunicazioni}
+\author{Flavio Colacicchi}
+\date{10/01/2024}
+\begin{document}
+\maketitle
+\LARGE\[sorgente\to\boxed{canale}\to destinazione\]\normalsize
+più nel dettaglio da parte della sorgente
+\[s(t)\to\boxed{ADC}\to s[n]\to\boxed{quantizzatore}\]
+La quantizzazione converte il segnale campionato in una sequenza di bit, assegnando ad esempio ai campioni che si trovano nello stesso intervallo di quantizzazione il valor medio tra i due anche se i due campioni differiscono, ad esempio se l'intervallo di quantizzazione per il bit 00 è [0,1] sia 0,3 che 0,7 saranno quantizzati in 00. Questo introduce un errore di quantizzazione che è una variabile aleatoria
+\[\left[-\frac{\Delta}{2},\frac{\Delta}{2}\right]\ni e_q[n]=x[n]-x_q[n]\]
+Prendendo \(M\) intervalli di campionamento per quantizzare il segnale in elementi da \(K=\log_{2}M\)bit il segnale che ha ampiezza \([-V,V]\) possiamo trovare l'ampiezza di un intervallo di quantizzazione
+\[\Delta=\frac{2V}{M}\]
+e da qui possiamo vedere che la sua densità di probabilità
+\[p_E(e)=\frac{1}{\Delta}rect\left(\frac{e}{\Delta}\right)\]
+Ovviamente all'aumentare di \(M\) si riduce \(e_q[n]\) (ad edempio per la radio e la tv si usa \(M=16\)). Si vede facilmente che \(e_q\) è uniformemente distribuita, quindi posso calcolarne la potenza
+\[P_e=\frac{1}{\Delta}\int_{-\frac{\Delta}{2}}^\frac{\Delta}{2}e^2de=\frac{e^3}{3\Delta}\Big|_{-\frac{\Delta}{2}}^\frac{\Delta}{2}=\frac{\Delta^2}{12}\]
+E da questo ottengo
+\[\sigma^2_E=p_E(e)\hspace{2cm}\mu_E=0\]
+Riscrivo la potenza in funzione di \(V\) e \(M\)
+\[P_e=\frac{\Delta^2}{12}=\frac{4V^2}{12M^2}=\frac{V^2}{3M^2}\]
+Se scrivo la potenza in scala logaritmica ottengo
+\[{(P_e)}_{dB}=10\log_{10}\frac{V^3}{3}-10\log_{10}M^2=10\log_{10}\frac{V^3}{3}-10\log_{10}2^{2K}\xlongequal{10\log_{10}2=3}10\log_{10}\frac{V^3}{3}-6K\]
+Se considero il segnale \(x\) uniformemente distribuito si \([-V,V]\) ottengo la densità di probabilità
+\[p_X(x)=\frac{1}{2V}rect\left(\frac{x}{2V}\right)\]
+Da qui ottengo la potenza
+\[P_x=\frac{1}{2V}\int_{-V}^V x^2dx=\frac{1}{2V}\frac{x^3}{3}\Bigg|_{-V}^V=\frac{V^2}{3}\]
+Quindi
+\[{(P_e)}_{dB}={(P_x)}_{dB}-6K\]
+Se prendiamo la frequenza di campionamento \(f_c=8\text{kHz}\Rightarrow T_c=125\mu\)s e \(K=8\Rightarrow 64\)kb/s abbiamo la pulse code modulation, che è la base della trasmissione dei segnali. Dato che la banda è una risorsa preziosa si fa una codifica di sorgente.\\
+Un esempio è la codifica naturale dove si associa alsibolo con valore più basso la parola con tutti 0 e a quello più alto quella con tutti 1 ma non è la più efficiente dato che alcune parole di codice potrebbero non essere usate mai, quindi spesso si usa una codifica fatta appositamente per il tipo di segnale in cui si associano ai simboli più comuni parole con meno bit e a quelli più rari quelle con più bit, risparmiando così banda usando simboli con numero di bit variabile che riduce il numero medio di bit usati.\\
+Esempio
+Prese le probabilità dei simboli
+\[[0.02,0.29,0.03,0.04,0.33,0.04,0.06,0.19]\]
+costruiamo un albero (di Huffman) mettendo prima nelle foglie i due valori minori, in questo caso 002 e 003 e mettendo come loro genitore la loro somma, 005 che è molto simile ai valori 004 ripetuto due volte e 006, le metto come foglie mettendo in ordine cresscente da destra verso sinistra e ripetendo la procedura precedente, sommando quindi i due 004 e lo 005 con 006, ottenendo rispettivamente 008 e 011 che non sono confrontabili con gli altri bit, quindi li sommo tra di loro ottenendo 019 che è confrontabile con 019, 029 e 033, così ho preso tutti i bit, ora ripeto la procedura fino a ottenere la radice che dovrebbe venire 1.\accapo
+Con questo albero possiamo distribuire i bit di codifica aggiungendo a ogni figlio sinitro 1 alla codifica e a ogni fliglio detro 1. Così facendo ottengo la seguente codifica
+\[\begin{matrix}
+    0.19&10\\
+    0.29&01\\
+    0.33&00\\
+    0.04&1111\\
+    0.04&1110\\
+    0.06&1100\\
+    0.02&11011\\
+    0.03&11010
+\end{matrix}\]
+La ripetizione degli 0.04 è dovuto al fatto che due simboli hanno la setssa probabilità. Il numero medio di bit usati è quindi
+\[\#bit=\sum_{i=1}^M p_i K_i=0.33\cdot 2+0.23\cdot 2+\cdots=2.43\text{kb/s}<3\text{ che sarebbero quelli usati dalla codifica naturale}\]
+E questo sistema garantisce la leggibilità de segnale dato che nessuna parole è inizio di un'altra.\accapo\hspace*{1cm}\accapo
+\Eaccentata possibile usare un quantozzatore a intervalli non costanti, ad esempio
+\[V_1\to\Delta_1=8\hspace{1cm}V_2\to\Delta_2=4\hspace{1cm}V_3\to\Delta_3=2\hspace{1cm}V_4\to\Delta_4=2\]
+quindi
+\[p_1=0.5\hspace{1cm}p_2=0.25\hspace{1cm}p_3=p_4=0.125\]
+Per calcolare la potenza dell'errore di quantizzazione considero tutti gli intervalli coma variabili aleatorie indipendenti e ottengo
+\[P_e=\frac{{\Delta_1}^2}{12}p_1+\frac{{\Delta_2}^2}{12}p_2+\frac{{\Delta_3}^2}{12}p_3+\frac{{\Delta_4}^2}{12}p_4=\frac{37}{12}\]
+In codifica naturale mi servirebbero 2 bit per simbolo ma noi vogliamo ottimizzare quindi creiamo ora l'albero di Huffman e ottengo la codifica
+\[\begin{matrix}
+    V_1&0\\
+    V_2&10\\
+    V_3&110\\
+    V_3&111\\
+\end{matrix}\]
+Quindi
+\[\#bit=0.5\cdot 1+0.25\cdot 2+0.125\cdot 3+0.125\cdot 3=1.75=\frac{7}{4}<2\]
+Ma qual'è il numero minimo di bit che posso usare per trasmettere un segnale senza perdere l'informazione? questo numero è l'entropia della sorgente
+\[H=\sum_{i=1}^M p_i\log_{2}\frac{1}{p_1}=-\sum_{i=1}^M p_i\log_2 p_i\]
+Che in alcuni casi è ottenibile ma non esiste un modo univoco per ottenerlo, dipende dai casi. Si chiama informazione
+\[I=\log_2\frac{1}{p_i}\]
+La quantità di informazione contenuta in un simbolo. Quindi l'entropia della sorgente è
+\[H=\sum_{i=1}^M p_i I_i\]
+Quindi se un simbolo ha \(p_i=1\Rightarrow H=0\) mentre se tutti i simboli sono equiprobabili \(p_i=\frac{1}{M}\Rightarrow H=\sum_{i=1}^M\frac{1}{M}\log_2 M=\log_2 M\). Se \(M=2\Rightarrow H=p\log_2\frac{1}{p}+(1-p)\log_2\frac{1}{1-p}\)
+
+\end{document}

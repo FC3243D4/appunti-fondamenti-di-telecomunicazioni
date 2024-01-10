@@ -1,0 +1,124 @@
+\documentclass{article}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{extarrows}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usepackage{cancel}
+\usetikzlibrary{shapes,arrows}
+
+\newcommand{\accapo}{\\\hspace*{1cm}\\}
+\newcommand{\Eaccentata}{$\grave{\text{E}}$ }
+\newcommand{\vopen}{``}
+\newcommand{\vclose}{''}
+\newcommand{\vclosespace}{'' }
+
+\setlength{\parindent}{0cm}
+% chktex-file 44
+% chktex-file 36
+% chktex-file 1
+\hfuzz=100pt
+
+\title{Serie di Fourier\\\normalsize fondamenti di telecomunicazioni}
+\author{Flavio Colacicchi}
+\date{25/10/2023}
+\begin{document}
+\maketitle 
+Utilizzabile solo per i segnali periodici che rispettano le condizioni di Dirichlet.\accapo
+Dato \(x(t)\) periodico, quindi \(x(t)=x(t-T)\), allora possiamo scrivere il segnale come
+\LARGE\[x(t)=\sum_{n=-\infty}^{+\infty}c_n e^{i\frac{2\pi nt}{T}}\]\normalsize
+Dove \(c_n\) sono i \textbf{coefficienti di Fourier} del segnale e $e^{i\frac{2\pi nt}{T}}$ sono le armoniche della serie di Fourier. Le armoniche costituiscono una base ortonormale sullo spazio vettoriale che ha, essendo queste numerabili ma infinite, dimensione infinita, si tratta di una base ortonormale data la definizione di prodotto scalare:
+\[<x(t),y(t)>=\int_{-\infty}^{+\infty}x(t)y^*(t)dt=\]
+\[\Downarrow\]
+\[<e^{i\frac{2\pi nt}{T}},e^{i\frac{2\pi mt}{T}}>=\frac{1}{T}\int_{-\frac{T}{2}}^{+\frac{T}{2}}e^{i\frac{2\pi(n-m)t}{T}}dt=\frac{1}{\bcancel{T}}\frac{\bcancel{T}}{i2\pi(n-m)}e^{i\frac{2\pi(n-m)t}{T}}\Big|_{-\frac{T}{2}}^{\frac{T}{2}}=\]
+\[=\frac{1}{\pi(n-m)}\frac{e^{i\pi(n-m)}-e^{-i\pi(n-m)}}{2i}\xlongequal{Eulero}\frac{1}{\pi(n-m)}\sin[(n-m)\pi]=sinc(n-m)\xlongequal{n,m\in\mathbb{Z}}\delta[n-m]\]
+Perché il prodotto tra due vettori della base viene 0 e un prodotto di un vettore con se stesso viene 1\accapo
+Usando questa definizione e il fatto che il prodotto scalare tra un versore e un elemento dello spazio vettoriale mi restituisce lo scalare da abbinare al versore nella combinazione lineare possiamo dire che:
+\[c_n=<x(t),e^{i\frac{2\pi nt}{T}}>=\frac{1}{T}\int_{-\frac{T}{2}}^{+\frac{T}{2}}x(t)e^{-i\frac{2\pi nt}{T}}dt\]
+\newpage\large Esempi:\normalsize
+\begin{enumerate}
+    \item \[x(t)=A\Rightarrow\text{segnale costante}\]
+        A occhio posso vedere che l'unico coefficente non nullo sarà quello per \(n=0\Rightarrow e^{i\frac{2\pi nt}{T}=1}\) ma se volessimo usare la definizione formale avremmo:
+        \[c_n=\frac{1}{T}\int_{-\frac{T}{2}}^{+\frac{T}{2}}Ae^{-i\frac{2\pi nt}{T}}dt=\frac{A}{\bcancel{T}}\frac{\bcancel{T}}{-i2\pi n}e^{-i\frac{2\pi nt}{T}}\Big|_{-\frac{T}{2}}^{\frac{T}{2}}=\frac{A}{\pi n}\frac{e^{-i\pi n}-e^{i\pi n}}{-2i}=\frac{A}{\pi n}\sin(\pi n)=\]
+        \[=Asinc(n)\xRightarrow{n\in\mathbb{Z}}c_n=\begin{cases}
+            A&n=0\\0&\text{altrove}
+        \end{cases}\]
+    \item \[x(t)=A\cos\left(\frac{2\pi t}{T}\right)\]
+        \[x(t)=A\cos\left(\frac{2\pi t}{T}\right)\xlongequal{Eulero}\frac{A}{2}\left(e^{i\frac{2\pi t}{T}}+e^{-i\frac{2\pi t}{T}}\right)=\frac{A}{2}e^{i\frac{2\pi t}{T}}+\frac{A}{2}e^{-i\frac{2\pi t}{T}}\Rightarrow c_n=\begin{cases}\frac{A}{2}&n=\pm1\\0&\text{altrove}\end{cases}\]
+        Formalmente
+        \[c_n=\frac{1}{T}\int_{-\frac{T}{2}}^{\frac{T}{2}}A\cos\left(\frac{2\pi t}{T}\right)e^{-i\frac{2\pi nt}{T}}dt=\frac{A}{2T}\int_{-\frac{T}{2}}^{\frac{T}{2}}\left(e^{i\frac{2\pi t}{T}}+e^{-i\frac{2\pi t}{T}}\right)e^{-i\frac{2\pi nt}{T}}dt=\frac{A}{2\bcancel{T}}\frac{\bcancel{T}}{-i2\pi(n-1)}e^{-i\frac{2\pi(n-1)t}{T}}\Big|_{-\frac{T}{2}}^\frac{T}{2}+\]
+        \[+\frac{A}{2T}\frac{T}{-i2\pi(n+1)}e^{-i\frac{2\pi(n+1)t}{T}}\Big|_{-\frac{T}{2}}^\frac{T}{2}=\frac{A}{2\pi(n-1)}\sin[\pi(n-1)]+\frac{A}{2\pi(n+1)}\sin[\pi(n+1)]=\]
+        \[=\frac{A}{2}sinc(n-1)+\frac{A}{2}sinc(n+1)\xRightarrow{n\in\mathbb{Z}}\frac{A}{2}\delta[n-1]+\frac{A}{2}\delta[n+1]\Rightarrow c_n=\begin{cases}\frac{A}{2}&n=\pm1\\0&\text{altrove}\end{cases}\]
+    \item Treno di Rect\[x(t)=\sum_{n=-\infty}^{+\infty}rect\left(\frac{t-nT}{\tau}\right)\hspace{1cm}T>\tau\text{ per evitare sovrappposizione}\]
+        \[c_n=\frac{1}{T}\int_{-\frac{T}{2}}^{\frac{T}{2}}rect\left(\frac{T}{\tau}\right)e^{-i\frac{2\pi nt}{T}}dt=\frac{1}{T}\int_{-\frac{\tau}{2}}^\frac{\tau}{2}e^{-i\frac{2\pi nt}{T}}dt=\frac{1}{\bcancel{T}}\frac{\bcancel{T}}{-i2\pi n}e^{-i\frac{2\pi nt}{T}}\Big|_{-\frac{\tau}{2}}^\frac{\tau}{2}=\frac{1}{\pi n}\frac{e^{-i\frac{\pi n\tau}{T}}-e^{i\frac{\pi n\tau}{T}}}{-2i}=\]
+        \[=\frac{1}{\pi n}\sin\left(\frac{\pi n\tau}{T}\right)\xlongequal{\cdot\frac{\tau}{T}\frac{T}{\tau}}\frac{\tau}{T}sinc\left(\frac{n\tau}{T}\right)=c_n\]
+\end{enumerate}
+\large Esercizi per casa\normalsize
+\begin{enumerate}
+    \item \[x(t)=A\sin\left(\frac{2\pi t}{T}\right)\]
+        Da Eulero:
+        \[x(t)=\frac{A}{2i}\left(e^{i\frac{2\pi t}{T}}-e^{-i\frac{2\pi t}{T}}\right)\Rightarrow c_n=\begin{cases}n\frac{A}{2i}&n=\pm1\\0&\text{altrove}\end{cases}\]
+    \item \[x(t)=A\cos^2\left(\frac{2\pi t}{T}\right)\]
+        Dalle formule di duplicazione:
+        \[x(t)=A\frac{1+\cos\left(\frac{4\pi t}{T}\right)}{2}\xlongequal{Eulero}\frac{A}{2}+\frac{A}{4}\left(e^{i\frac{4\pi t}{T}}+e^{-i\frac{4\pi t}{T}}\right)\Rightarrow c_n=\begin{cases}
+            \frac{A}{2}&n=0\\
+            \frac{A}{4}&n=\pm2\\
+            0&\text{altrove}
+        \end{cases}\]
+\end{enumerate}
+\Large Proprietà della serie di Fourier:
+\begin{enumerate}
+    \item \large Linearità\normalsize
+        \[x(t)=\sum_{n=-\infty}^{\infty}c_n e^{i\frac{2\pi nt}{T}},\, y(t)=\sum_{n=-\infty}^{\infty}d_n e^{i\frac{2\pi nt}{T}}\]
+        \[\Downarrow\]
+        \[ax(t)+by(t)=\sum_{n=-\infty}^{\infty}(ac_n+bd_n) e^{i\frac{2\pi nt}{T}}\]
+        Formalmente
+        \[\frac{1}{T}\int_{-\frac{T}{2}}^\frac{T}{2}[ax(t)+by(t)]e^{-i\frac{2\pi nt}{T}}dt=\frac{a}{T}\int_{-\frac{T}{2}}^\frac{T}{2}x(t)e^{-i\frac{2\pi nt}{T}}dt+\frac{b}{T}\int_{-\frac{T}{2}}^\frac{T}{2}y(t)e^{-i\frac{2\pi nt}{T}}dt=\sum_{n=-\infty}^{\infty}(ac_n+bd_n) e^{i\frac{2\pi nt}{T}}\]
+        \textbf{Esempio utile}: pseudo-onda quadra
+        \[\sum_{n=-\infty}^\infty rect\left(\frac{t-nT}{\tau}\right)-rect\left(\frac{t-\frac{T}{2}-nT}{\tau}\right)\]
+        Guardando il grafico posso scrivermi l'integrale come
+        \[\frac{1}{T}\int_{-\frac{\tau}{2}}^\frac{\tau}{2}e^{-i\frac{2\pi nt}{T}}dt-\int_{-\frac{T}{2}}^\frac{T}{2}e^{-i\frac{2\pi nt}{T}}dt=\frac{\bcancel{T}}{\bcancel{T}}\frac{e^{-i\frac{2\pi nt}{T}}}{-i2\pi n}\Big|_{\frac{\tau}{2}}^\frac{\tau}{2}-\frac{\bcancel{T}}{\bcancel{T}}\frac{e^{-i\frac{2\pi nt}{T}}}{-i2\pi n}\Big|_{\frac{\tau}{2}}^\frac{\tau}{2}=\]
+        \[=\frac{e^{-i\pi\frac{n\tau}{T}}-e^{i\pi\frac{n\tau}{T}}}{-i2\pi n}-\frac{e^{-i\pi\frac{n}{T}\left(T-\frac{\tau}{2}\right)}-e^{i\pi\frac{2}{T}\left(T-\frac{\tau}{n}\right)}}{-i2\pi n}=\frac{\sin\left(\pi n\frac{\tau}{T}\right)}{n\pi}-\frac{e^{i\frac{\pi n\tau}{T}}-e^{i\frac{\pi n\tau}{T}}}{-2i\pi n}=2\frac{\sin\left(\pi n\frac{\tau}{T}\right)}{n\pi}=\]
+        \[c_n=\frac{2\tau}{T}sinc\left(\frac{n\tau}{T}\right)\]
+        Ma è sbagliato perché a un certo punto abbiamo diviso per \(n\) che può valere 0, e non sarebbe un problema se oltre ad azzerarsi il denominatore (come abbiamo visto nell'esempio (3) verrebbe una sinc) ma anche il numeratore rendendo quella una forma indeterminata, dobbiamo quindi analizzare il caso \(n=0\) a parte.\accapo
+        Oppure, sapendo dall'esempio (3) i coefficienti del treno superiore (che chiamerò \(x(t)\)) e posso vedere quello inferiore come
+        \[x(t)-1\]
+        E quindi vedere il segnale così
+        \[2x(t)-1\]
+        A questo punto per la proprietà di lineartià della serie di Fourier i coefficienti sono
+        \[c_n=\begin{cases}
+            \frac{2\tau}{T}-1&n=0\\
+            \frac{2\tau}{T}sinc\left(\frac{n\tau}{T}\right)&n\neq0
+        \end{cases}\]
+    \item \large Traslazione nel tempo\normalsize
+        \[x(t)=\sum_{n=-\infty}^\infty c_n e^{i\frac{2\pi nt}{T}}\]
+        \[\Downarrow\]
+        \[x(t-t_0)=\sum_{n\in\mathbb{Z}}d_n e^{i\frac{2\pi nt}{T}}=\sum_{n\in\mathbb{Z}}c_n e^{i\frac{2\pi n(t-t_0)}{T}}=\sum_{n\in\mathbb{Z}}c_n e^{-i\frac{2\pi nt_0}{T}} e^{i\frac{2\pi nt}{T}}\]
+        \[\Downarrow\]
+        \[d_n=c_n e^{-i\frac{2\pi nt_0}{T}}\]
+        Formalmente
+        \[d_n=\frac{1}{T}\int_{-\frac{T}{2}}^\frac{T}{2}x(t-t_0)e^{-i\frac{2\pi nt}{T}}dt\xlongequal{t'=t-t_0}\frac{1}{T}\int_{-\frac{T}{2}-t_0}^{\frac{T}{2}-t_0}x(t')e^{-i\frac{2\pi t_0 n}{T}}e^{-i\frac{2\pi nt'}{T}}dt'=\]
+        \[=e^{-i\frac{2\pi n t_0}{T}}\frac{1}{T}\int_{-\frac{T}{2}-t_0}^{\frac{T}{2}-t_0}x(t')e^{-i\frac{2\pi nt'}{T}}dt'=c_n e^{-i\frac{2\pi nt_0}{T}}\]
+        \textbf{Esempio utile} treno di rect in cui la rect inizia in 0\\
+        Dall'esempio (3) ho i coefficienti \(c_n\) del segnale non traslato (che chiamerò \(x(t)\)). Questo viene traslato di \(\frac{\tau}{2}\Rightarrow\) applico la proprietà della traslazione nel tempo della serie di Fourier
+        \[x\left(t-\frac{\tau}{2}\right)\Rightarrow d_n=c_n e^{-i\frac{\pi n\tau}{T}}\]
+        Formalmente
+        \[d_n=\frac{1}{T}\int_{0}^{\tau}e^{i\frac{2\pi nt}{T}}dt=\frac{\tau}{T}sinc\left(\frac{n\tau}{T}\right)e^{i\frac{\pi n\tau}{T}}\]
+        \textbf{Esempio utile} Onda quadra (esempio precedente ma con \(T=2\tau\))\\
+        Dall'esempio precedente ho
+        \[c_n=\frac{1}{2}sinc\left(\frac{n}{2}\right)e^{-i2\pi n}=\frac{1}{2}\frac{e^{i\frac{\pi n}{2}}-e^{-i\frac{\pi n}{2}}}{\left(\frac{\pi n}{2}\right)2i}e^{-i2\pi n}\]
+    \item \large Traslazione in frequenza\normalsize
+        \[x(t)=\sum_{n\in\mathbb{Z}}c_n e^{i\frac{2\pi nt}{T}}\]
+        \[y(t)=x(t)e^{i\frac{2\pi kt}{T}}=\sum_{n\in\mathbb{Z}}d_n e^{i\frac{2\pi nt}{T}}=\sum_{n\in\mathbb{Z}}c_n e^{i\frac{2\pi nt}{T}e^{i\frac{2\pi kt}{T}}}\xlongequal{n'=n+k}\sum_{n'\in\mathbb{Z}}c_{n'-k}e^{i\frac{2\pi n't}{T}}\Rightarrow d_n=c_{n-k}\]
+        Formalmente
+        \[\frac{1}{T}\int_{-\frac{T}{2}}^{\frac{T}{2}}x(t)e^{i\frac{2\pi kt}{T}}e^{i\frac{2\pi nt}{T}}dt=\frac{1}{T}\int_{-\frac{T}{2}}^\frac{T}{2}x(t)e^{-i\frac{2\pi(n-k)t}{T}}dt\]
+        \LARGE Integrare appunti\accapo\normalsize
+\end{enumerate}
+\end{document}
