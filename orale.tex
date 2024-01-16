@@ -238,4 +238,70 @@ Se oglio calcolare il bit error rate (BER) devo fare la sommatoria delle probabi
 \[BER=\frac{1}{2}Q\left(\frac{\overline{c}-c_1}{\sigma_n}\right)+\frac{1}{2}Q\left(\frac{c_2-\overline{c}}{\sigma_n}\right)\]
 che in questo caso è
 \[BER=Q\left(\frac{c_2-c_1}{\sigma_n}\right)=Q\left(\frac{d}{\sigma_n}\right)=Q\left(\frac{d}{\sqrt{N_0 B}}\right)\]
+Un modo per trasmettere molteplici simboli è la codifica PAM (pulse amplitude modulation) in cui a valori diversi del segnale trasmesso corrisponde un diverso simbolo, ecco un'immagine del grafico della trasmissione e del rispettivo diagramma ad occhio generato
+\begin{center}
+    \includegraphics[width=\textwidth]{images/pam.jpg}
+\end{center}
+Bisogna ricordarsi che quando si trasmette un segnale attraverso un canale possiamo modellarlo così
+\[x(t)\to\boxed{H(f)+n(t)}\to y(t)\]
+Dove \(n(t)\) è un AWGN (additive white gaussian noise).\\
+Quindi 
+\[y(t)=\sum_{m}c_m g(t-m T_s)+n(t)\Rightarrow y(0)=Y=c_m+n\]
+\[p_N(n)=\frac{1}{\sqrt{2\pi}\sigma_n}e^{-\frac{n^2}{2{\sigma^2}_n}}\]
+\[{\sigma^2}_n=\intfity\frac{N_0}{2}df=\int_{-B}^B\frac{N_0}{2}df=B N_0\]
+\[\Rightarrow p_Y(y)=\frac{1}{\sqrt{2\pi}\sigma_n}e^{-\frac{{(y-c_1)}^2}{2{\sigma^2}_n}}\]
+Se le due trasmissioni si vanno a sovrapporre e possibile che si crei un errore dovuto alla trasmissione di un simbolo sbagliato dato checon il pezzettino della trasmissione precedente ciene superata la soglia per un altro simbolo, quindi si aggiunge la funsione di errore complementare
+\[\frac{1}{2}erfc\left(\frac{\overline{c}-c_1}{\sqrt{2}\sigma_n}\right)\]
+Dove
+\[erfc(x)=\int_{x}^{+\infty}e^{-t^2}dt\frac{2}{\sqrt{\pi}}\]
+Da cui si può calcolare il BER sommando la funzione di errore complementare per ogni simbolo moltiplicata per la probabilità di trasmissione del simbolo stesso. Ovviamente è minimo quando i due simboli sono uguali.
+\accapo 
+per pigrizia è stata creata la funzione
+\[Q(x)\doteq\frac{1}{2}erfc\left(\frac{x}{\sqrt{2}}\right)\]
+Il ber è considerato \textit{error free} quando
+\[BER=10^{-9}\Rightarrow Q(6)\xRightarrow{BER=Q\left(\frac{d}{2\sqrt{N_0 B}}\right)}d\gg 0\]
+Ovviamente una volta ricevuta la trasmissione questa viene filtrata per rimuovare almeno il rumore fuori banda
+\[x(t)\to\boxed{canale}\to\boxed{H_0(f)}\to y(t)\]
+Ma anziché usare una \(rect\) si può usare un filtro adattato per migliorare le prestazioni
+\[y(t)=(x(t)+n(t))*h_0(t)=\left[\sum_m c_m g(t-mT_s)+n(t)\right]*h_0(t)\]
+Per vedere la statistica evito di portarmi dietro la sommatoria e analizzonil caso di trasmissione di un singolo campioname 
+\[c_m g(t)*h_0(t)+n(t*h_0(t))\]
+Ora controllo il segnale utile
+\[c_m g(t)*h_0(t)=c_m\intfity G(f)H_0(f)e^{i2\pi ft}df\]
+E lo calcolo in \(t=0\)
+\[c_m\intfity G(f)H_0(f)df\]
+A questo punto posso calcolare il numeratore del \textit{Signal to Noise Ratio} calcolando la potenza del segnale utile
+\[SNR=\frac{{c_m}^2\left|\intfity G(f)H_0(f)df\right|^2}{\cdots}\]
+Ora guardiamo la densità spettrale del rumore una volta uscito dal filtro
+\[\frac{N_0}{2}{|H_0(f)|}^2\]
+Ora calcoliamone la potenza
+\[{\sigma^2}\omega=\intfity\frac{N_0}{2}{|H_0(f)|}^2df\]
+E abbiamo anche il denominatore dell'SNR
+\[SNR=\frac{{c_m}^2\left|\intfity G(f)H_0(f)df\right|^2}{\intfity\frac{N_0}{2}{|H_0(f)|}^2df}\]
+A questo punto ricordiamo la disuguaglianza di Schwartz che dice che il quadrato del modulo dell'integrake è minore o uguale del prodotto degli integrali dei moduli quadri
+\[SNR=\frac{{c_m}^2\left|\intfity G(f)H_0(f)df\right|^2}{\intfity\frac{N_0}{2}{|H_0(f)|}^2df}\leq\frac{{c_m}^2\intfity {|G(f)|}^2df\intfity{|H_0|}^2df}{\frac{N_0}{2}\intfity{|H_0(f)|}^2df}\]
+DDato che vogliamo che valga l'uguaglianza per avere il massimo SNR usiamo la condizione della disuguaglianza di Schwartz che ci dice che l'uguaglianza vale quando una funzione è la complessa coniugata dell'altra
+\[H_0(f)=G^* (f)\Rightarrow h_0(t)=g^*(-t)\xlongequal{g(t)\in\mathbb{R}\forall t\in\mathbb{R}}g(-t)\]
+\[\Rightarrow SNR=\frac{{c_m}^2 2\intfity{|G(f)|^2}df}{N_0}\]
+Inoltre so che
+\[E_G=\intfity {|G(f)|}^2df=\intfity{|g(t)|}^2 dt\Rightarrow SNR=\frac{2{c_m}^2 E_G}{N_0}\]
+E questo è il masismo valore possibile dell'SNR e si ottiene con un filtro adattato.\\
+A questo punto calcoliamo il Ber nel caso di un filtro adattato
+\[BER=Q\left(\frac{\sqrt{SNR_2}-\sqrt{SNR_1}}{2}\right)=Q\left(\frac{c_2-c_1}{2}\sqrt{\frac{2E_G}{N_0}}\right)=Q\left((c_2-c_1)\sqrt{\frac{E_G}{2N_0}}\right)\]
+Ora vediamo i casi particolari
+\begin{itemize}
+    \item UNIPOLARE (\(c_1=0, c_2\neq0\))
+        \[BER=Q\left(c_2\sqrt{\frac{E_g}{2N_0}}\right)\]
+    \item BIPOLARE (\(c_1=-c_2\))
+        \[BER=Q\left(2c_2\sqrt{\frac{E_g}{2N_0}}\right)\]
+\end{itemize}
+Ma in questo casi sto considerando l'energia del simbolo pensando che siano uguali nella bipolare e nella unipolare, sarebbe meglio usare l'energia del bit
+\begin{itemize}
+    \item UNIPOLARE
+        \[E_b=\frac{{c_2}^2 E_g+0}{2}\Rightarrow BER=Q\left(\sqrt{\frac{E_b}{N_0}}\right)\]
+    \item BIPOLARE
+        \[E_b=\frac{{c_1}^2 E_g+{c_2}^2 E_g}{2}\Rightarrow BER=Q\left(\sqrt{\frac{2E_b}{N_0}}\right)\]
+\end{itemize}
+E questi dati sono quelli che di solito si usano per generare un grafico che mostra le prestazioni di un sistema mettendo sull'asse x \(\frac{E_b}{N_0}\) e su y \(BER\)
+
 \end{document}
