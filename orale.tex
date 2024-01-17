@@ -38,7 +38,7 @@
 
 \title{Orale\\\normalsize fondamenti di telecomunicazioni}
 \author{Flavio Colacicchi}
-\date{10/01/2024}
+\date{10$-$17/01/2024}
 \begin{document}
 \maketitle
 \LARGE\[sorgente\to\boxed{canale}\to destinazione\]\normalsize
@@ -275,7 +275,7 @@ A questo punto posso calcolare il numeratore del \textit{Signal to Noise Ratio} 
 Ora guardiamo la densità spettrale del rumore una volta uscito dal filtro
 \[\frac{N_0}{2}{|H_0(f)|}^2\]
 Ora calcoliamone la potenza
-\[{\sigma^2}\omega=\intfity\frac{N_0}{2}{|H_0(f)|}^2df\]
+\[{\sigma^2}_w=\intfity\frac{N_0}{2}{|H_0(f)|}^2df\]
 E abbiamo anche il denominatore dell'SNR
 \[SNR=\frac{{c_m}^2\left|\intfity G(f)H_0(f)df\right|^2}{\intfity\frac{N_0}{2}{|H_0(f)|}^2df}\]
 A questo punto ricordiamo la disuguaglianza di Schwartz che dice che il quadrato del modulo dell'integrake è minore o uguale del prodotto degli integrali dei moduli quadri
@@ -303,5 +303,113 @@ Ma in questo casi sto considerando l'energia del simbolo pensando che siano ugua
         \[E_b=\frac{{c_1}^2 E_g+{c_2}^2 E_g}{2}\Rightarrow BER=Q\left(\sqrt{\frac{2E_b}{N_0}}\right)\]
 \end{itemize}
 E questi dati sono quelli che di solito si usano per generare un grafico che mostra le prestazioni di un sistema mettendo sull'asse x \(\frac{E_b}{N_0}\) e su y \(BER\)
+\newpage
+\Huge Integrare appunti lezione delel 14:00 del 16/01/24\normalsize
+\newpage
+Supponiamo di aver codificato un segnale x(t) e che lo stiamo trasmettendo tramite un canale in banda base
+\[x(t)=\sum_{m} c_m g(t-mT_s)\to\boxed{H(f)=\begin{cases}\cdots&-B\leq f\leq B\\0&altrove\end{cases}+n(t)}\to\]
+\[\to\boxed{filtro\ adattato\ G^*(f)}\to\boxed{DAC}\to\boxed{\text{decisore a soglia}}\]
+Da qui abbiamo 
+\[BER=Q\left((c_2-c_1)\sqrt{\frac{E_g}{2N_0}}\right)\xlongequal{caso bipolare}Q=\left(\sqrt{\frac{E_b 2}{N_0}}\right)\]
+Se vogliamo un segnale error free dobbiamo avere
+\[BER=10^{-9}\Rightarrow\sqrt{\frac{E_b 2}{N_0}}=6\Rightarrow\frac{E_b}{N_0}=18=12.5dB\]
+A questo punto vogliamo sapere quanto è il bitarte masismo, per questo ci serve il seconodo teorema di Shannon che dice
+\begin{center}
+    Prendiamo un canale con banda \(B\) corrotto da un rumore bianco gaussiano, allora la capacità di canale (misurata in \(\frac{b}{s}\)) per trasmettere un segnale con errore piccolo a piacere è
+\end{center}
+\[C=B\log_2\left(1+\frac{P_R}{P_N}\right)\]
+dove \(P_R\) è la potenza ricevuta e \(P_N\) e la potenza del rumore, che noi abbiamo chiamato \({\sigma^2}_n\). Allora lo riscrivo così
+\[C=B\log_2\left(1+\frac{P_R}{{\sigma^2}_n}\right)=B\log_2(1+SNR)\]
+Ma avevamo detto che nel segnale in banda base il symbol rate doveva essere \(R_s\leq 2B\) e quindi il bit rate \(R_b\leq2B\log_2(M)\) quindi confrontandolo con il teorema sopracitato abbiamo
+\[2\bcancel{B}\log_2 M=\bcancel{B}\log_2(1+SNR)\Rightarrow \log_2 M^2=\log_2(1+SNR)\Rightarrow M=\sqrt{1+SNR}\]
+Vediamo i vari casi in rapporto ai valori dell'SNR
+\begin{itemize}
+    \item caso peggiore
+        \[SNR=0dB\Rightarrow\frac{P_R}{P_N}=1\Rightarrow C=B\]
+    \item Caso decente
+        \[SNR=20dB\Rightarrow\frac{P_R}{P_N}=100\Rightarrow C=B\log_2(101)\sim 6.65B\]
+    \item 
+        \[B=10kHz,\ C=50\frac{kb}{s}\Rightarrow \frac{C}{B}=5\Rightarrow 1+SNR=2^5\]
+    \item GPS
+        \[B=1MHz,\, SNR=-30dB=10^{-3}\Rightarrow C=B\log_2(1+10^{-3})=1.4\frac{kb}{s}\]
+\end{itemize}
+Ricordiamo che
+\[P_R=\frac{E_b}{T_b}\Rightarrow P_R=E_b C\]
+E che
+\[R_N=N_0 B\]
+Quindi
+\[C=B\log_2\left(1+\frac{E_b C}{N_0 b}\right)\]
+\[\frac{C}{B}=\log_2\left(1+\frac{E_b}{N_0}\cdot\frac{C}{B}\right)\]
+\[2^{\frac{C}{B}}=1+\frac{E_b}{N_0}\cdot\frac{C}{B}\]
+\[\frac{E_b}{N_0}=\frac{2^{\frac{C}{B}}-1}{\frac{C}{B}}\]
+Così possiamo vedere il rapporto \(\frac{C}{B}\) in funzione di \(\frac{E_b}{N_0}\), che viene graficato con quest'ultimo espresso in scala logaritmica sulle x e \(\frac{C}{B}\) sulle y. Da qui c'è un limite molto importante che dobbiamo vedere, che è quello per \(C=0\)
+e per vederlo riscriviamo la formula così
+\[\frac{N_0}{E_b}=\frac{N_0 B}{E_b C}\log_2\left(1+\frac{E_b}{N_0}\cdot\frac{C}{B}\right)\xlongequal{\lambda=\frac{E_b}{N_0}\frac{C}{B}}\frac{1}{\lambda}\log_2(1+\lambda)\Rightarrow\frac{N_0}{E_b}=\frac{1}{\lambda}\frac{\ln(1+\lambda)}{\ln 2}\]
+\[\lim_{\lambda\to0}\frac{1}{\lambda}\frac{\ln(1+\lambda)}{\ln 2}\xlongequal{\lim_{\lambda\to0}\frac{\ln(1+\lambda)}{\lambda}=1}\frac{1}{\ln 2}\]
+E questo è il valore che assume \(\frac{N_0}{E_b}\) quando \(\frac{C}{B}\to0\)\accapo
+Ma c'è anche un'altra curva da studiare,quella del rapporto tra \(C\) (sulle y) e \(B\) (sulle x) assumendo costante \(P_R\)
+\[C=B\log_2\left(1+\frac{P_R}{N_0 B}\right)\]
+Ed è una curva logairtmica con asintoto in \(1.44\frac{P_R}{N_0}\) che troviamo così 
+\[C=\frac{B N_0}{P_R}\frac{P_R}{N_0\log_2\left(1+\frac{P_R}{N_0 B}\right)}\xlongequal{\lambda=\frac{P_R}{N_0 B}}\frac{1}{\lambda}\frac{P_R}{N_0}\log_2(1+\lambda)=\frac{P_R}{N_0}\frac{\ln(1+\lambda)}{\ln 2\cdot\lambda}\xlongequal{\lim_{\lambda\to0}}\frac{P_R}{N_0}=1.44\frac{P_R}{N_0}=1.44 B\cdot SNR\]
+Se \(\frac{P_R}{N_0}\gg1\)
+\[C=B\log_2\left(\frac{P_R}{N_0B}\right)=B\log_{10}\frac{P_R}{N_0 B}\cdot\frac{1}{\log_{10}2}=B\cdot SNR|_{dB}=0.33\]
+\begin{center}
+\Huge Codici
+\end{center}\normalsize
+Per ridurre la posssibilità di errori Shannon ci dice di trasmettere più bit del necessario per avere dei bit di ridondanza. Mettiamo che la nostra informazione sia compista da \(R\) bit, allora trasmetteremo \(L=R+K\) bit. Quindi se vogliamo trasmettere la nostra informazione con un bitrate di \(R_b\) dovremo trasmettere con un bitrate effettivo di 
+\[R_c=\frac{R_b L}{K}\]
+Facciamo un esempio. Vogliamo trasmettere con un alfabeto sorgente fatto di 3 bit, ma per evitare errori ne trasmetto 4, ma quindi tra le 16 parole
+\[\begin{matrix}
+    0000&
+    0001&
+    0010&
+    0011&
+    0100&
+    0101&
+    0110&
+    0111\\
+    1000&
+    1001&
+    1010&
+    1011&
+    1100&
+    1101&
+    1110&
+    1111
+\end{matrix}\]
+Ne scelgo solo 8 da trasmettere dato che voglio trasmettere solo 8 simboli, allora sceglierò tutte parole che distino almeno 2 bit l'una dall'altra, ad Esempio
+\[\begin{matrix}
+    \textcolor{blue}{0000}&
+    0001&
+    0010&
+    \textcolor{blue}{0011}&
+    0100&
+    \textcolor{blue}{0101}&
+    \textcolor{blue}{0110}&
+    0111\\
+    1000&
+    \textcolor{blue}{1001}&
+    \textcolor{blue}{1010}&
+    1011&
+    \textcolor{blue}{1100}&
+    1101&
+    1110&
+    \textcolor{blue}{1111}
+\end{matrix}\]
+\[\Downarrow\]
+\[\begin{matrix}
+    0000&
+    0011&
+    0101&
+    0110&
+    1001&
+    1010&
+    1100&
+    1111
+\end{matrix}\]
+così ogni parola ha almeno 2 bit diversi da un'altra (\textbf{distanza di humming minima}). Per identificare un errore la distanza di humming deve essere
+\[d_{\min}\leq R+1\]
+Mentre per poterlo anche correggere deve essere
+\[d_{\min}\leq 2R+1\]
 
 \end{document}
