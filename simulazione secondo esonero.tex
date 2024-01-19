@@ -1,0 +1,111 @@
+\documentclass{article}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{extarrows}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usepackage{cancel}
+\usetikzlibrary{shapes,arrows, positioning, calc}
+\tikzstyle{vertex}=[draw,fill=black!15,circle,minimum size=20pt,inner sep=0pt]
+\tikzset{
+  treenode/.style = {align=center, inner sep=0pt, text centered,font=\sffamily},
+  arn_n/.style = {treenode, rectangle, white, font=\sffamily\bfseries, draw=black,fill=black, minimum width=2.5em,minimum height=1.5em},
+  arn_r/.style = {treenode, circle, red, draw=red, minimum width=2.5em, very thick},
+  arn_x/.style = {treenode, rectangle, draw=black,minimum width=0.5em, minimum height=0.5em}
+}
+
+\newcommand{\accapo}{\\\hspace*{1cm}\\}
+\newcommand{\Eaccentata}{$\grave{\text{E}}$ }
+\newcommand{\vopen}{``}
+\newcommand{\vclose}{''}
+\newcommand{\vclosespace}{'' }
+\newcommand{\trasformata}{\xrightarrow{\mathscr{F}}}
+\newcommand{\antitrasformata}{\xrightarrow{\mathscr{F}^{-1}}}
+\newcommand{\intfity}{\int_{-\infty}^{+\infty}}
+
+\setlength{\parindent}{0cm}
+% chktex-file 44
+% chktex-file 36
+% chktex-file 1
+\hfuzz=100pt
+
+\title{Simulazione secondo esonero\\\normalsize fondamenti di telecomunicazioni}
+\author{Flavio Colacicchi}
+\date{19/01/2024}
+\begin{document}
+\maketitle
+\begin{enumerate}
+  \item \[x(t)=8sinc(4t)\cos(6\pi t)\]
+    Campionato con intervallo \(T_c\) pari al valore massimo tale da non avere aliasing e viene poi ricostruito con un filtro passa-basso ideale nell'intervallo di frequenze \([-3,3]\) e ampiezza unitaria, calcolare
+    \[\begin{matrix}
+      T_c&&&x'(t)&&&X'(f)
+    \end{matrix}\]
+    Svolgimento:
+    \[H(f)=rect\left(\frac{f}{6}\right)\]
+    \[X(f)={\bcancel{8}}^{\bcancel{2}}\frac{1}{\bcancel{4}}rect\left(\frac{f}{4}\right)\frac{1}{\bcancel{2}}\left[\delta(f-3)+\delta(f+3)\right]=rect\left(\frac{f-3}{4}\right)\delta(f-3)+rect\left(\frac{f+3}{4}\right)\delta(f-3)\]
+    \[X[n]=\frac{1}{T_c}\sum_{n}X\left(f-\frac{n}{T_c}\right)\]
+    \[T_c=\frac{1}{f_c}=\frac{1}{2f_{\max}}=\frac{1}{10}\]
+    Se lavorassi nel tempo:
+    \[x_c(t)=x(t)\sum_{n}\delta(t-nT_c)=\sum_n x(n T_c)\delta(t-nT_c)\]
+    Se lavorassi nel dominio della freuenza
+    \[X_c(f)=10\sum_{n}X\left(f-10n\right)=10\sum_{n}rect\left(\frac{f-3-10n}{4}\right)+rect\left(\frac{f+3-10n}{4}\right)\]
+    Il segbale campionato è quindi un treno di rect 
+    \[X_c(f)=10\sum_n rect\left(\frac{f-5-10n}{8}\right)\]
+    Ora lo faccio passare per il filtro
+    \[X'(f)=X_c(f)H(f)=10\left[rect\left(\frac{f-2}{2}\right)+rect\left(\frac{f+2}{2}\right)\right]\]
+    E ora antitrasformo
+    \[x'(t)=10\cdot 2sinc(2t)(e^{i4\pi ft}+e^{-i4\pi ft})=40sinc(2t)\cos(4\pi t)\]
+  \item \(x(t)\) viene campionato con il massimo intervallo \(T\) per non avere aliasing generando
+    \[x_c(t)=\begin{cases}
+      1&n=\pm 1\\
+      0&\forall n\neq\pm 1
+    \end{cases}\]
+    Viene poi ricostruito con un filtro passa-basso ideale nell'intervallo \([-\frac{1}{2T},\frac{1}{2T}]\) e ha ampiezza \(T\). Calcolare
+    \[\begin{matrix}
+      x'(t)&&&X'(f)
+    \end{matrix}\]
+    Svolgimento:
+    \[x_c(t)=\delta(t-T)+\delta(t+T)\trasformata X_c(f)=e^{-i2\pi fT}+e^{i2\pi fT}=2\cos(2\pi fT)\]
+    \[H(f)=T\cdot rect\left(fT\right)\]
+    \[X'(f)=2T\cos(2\pi fT)rect(fT)\]
+    \[x'(t)=\bcancel{2}\bcancel{T}\frac{1}{\bcancel{2}}\frac{1}{\bcancel{T}}\left[\delta\left(t-T\right)+\delta\left(t+T\right)\right]*sinc\left(\frac{t}{T}\right)=sinc\left(\frac{t-T}{T}\right)+sinc\left(\frac{t+T}{T}\right)\]
+    Si poteva anche usare l'enunciato del teorema del campionamento che ci dice che nel caso in cui la frequenza di campionamento sia maggiore o uguale a quella di Nyquist
+    \[x'(t)=\sum_{n} x_c(t)sinc\left(\frac{t-nT}{T}\right)\]
+    E dopo ciò trasformarlo per ottenere \(X'(f)\)
+  \item \[z(t)=x(t)+y(t)\]
+    Dove \(x\) e \(y\) sono due processi aleatori stazionari statisticamente indipendenti bianchi nella banda \([-W,W]\) con densità di probabilità uniforme in \([-A,A]\). Calcolare
+    \[\begin{matrix}
+      \mu_z&&P_Z&&R_Z(\tau)&&G_Z(z)&&p_Z(z)
+    \end{matrix}\]
+    Svolgimento:\accapo
+    Essendo bianchi
+    \[\begin{matrix}
+      G_X(x)=\frac{P_X}{2W}rect\left(\frac{f}{2W}\right)&G_Y(y)=\frac{P_Y}{2W}rect\left(\frac{f}{2W}\right)
+    \end{matrix}\]
+    Essendo uniformi
+    \[\begin{matrix}
+      p_X(x)=\frac{1}{2A}rect\left(\frac{x}{2A}\right)&&p_Y(y)=\frac{1}{2A}rect\left(\frac{y}{2A}\right)
+    \end{matrix}\]
+    \[\mu_z=E[x(t)+y(t)]=E[x(t)]+E[y(T)]=\mu_x+\mu_y=\intfity x\cdot p_X(x)dx+\intfity y\cdot p_Y(y)dy=0+0=0\]
+    \[P_Y=P_X=E[x^2(t)]=\intfity x^2 p_X(x)dx=\frac{1}{2A}\int_{-A}^A x^2dx=\frac{1}{6A}x^3\Big|_{-A}^A=\frac{A^2}{3}\]
+    \[\Rightarrow G_X(x)=G_Y(y)=\frac{A^2}{6W}rect\left(\frac{f}{2W}\right)\]
+    \[R_Z(\tau)=E[z(t+\tau)z(t)]=E[(x(t+\tau)+y(t+\tau))(x(t)+y(t))]=R_X(\tau)+R_Y(\tau)+2\mu_x \mu_y=R_X(\tau)+R_Y(\tau)\]
+    \[G_Y(y)\antitrasformata R_Y(\tau)=R_X(\tau)=\frac{A^2}{\bcancel{6W}^3}\bcancel{2W}sinc(2W\tau)\Rightarrow R_Z(\tau)=\frac{2A^2}{3}sinc(2W\tau)\]
+    \[R_Z(\tau)\trasformata G_Z(f)=\frac{2A^2}{3}\frac{1}{2W}rect\left(\frac{f}{2W}\right)\]
+    \[p_Z(z)=p_X(x)*p_Y(y)\]
+  \item \[y(t)=x(t-T)+x(t+T)\hspace{2cm} x(t)=\cos(2\pi f_0t+\varphi)\]
+    sapendo \(f_0\) costante e \(\varphi\) uniformemente distribuita in \([0,2\pi]\)
+    Calcolare 
+    \[\begin{matrix}
+      \mu_y=0&P_Y=2\cos^2(2\pi f_0T)\\
+      R_Y(\tau)=2\cos(2\pi f_0\tau)\cos^2(2\pi f_0 T)&G_Y(f)=\cos^2(2\pi f_0 T)[\delta(f-f_0)+\delta(f+f_0)]
+    \end{matrix}\]
+\end{enumerate}
+\end{document}
